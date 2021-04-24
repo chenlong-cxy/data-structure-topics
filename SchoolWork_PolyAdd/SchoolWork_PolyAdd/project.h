@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-typedef int SLTDataType;
+typedef int SLTDataType;//指数、系数类型
 
 typedef struct SListNode
 {
@@ -14,10 +14,15 @@ typedef struct SListNode
 	struct SListNode* next;//用于存放下一个结点的地址
 }SListNode;
 
-//打印链表
-void SListPrint(SListNode* plist);
-
+//打印多项式
+void SListPrint(SListNode* head);
+//创建一个新结点，返回新结点地址
+SListNode* BuySLTNode(SLTDataType coef, SLTDataType expon);
 //尾插
-void SListPushBack(SListNode** pplist, SLTDataType coef, SLTDataType expon);
-
+void SListPushBack(SListNode** pHead, SLTDataType coef, SLTDataType expon);
+//选择排序
+SListNode* InsertSortList(SListNode* head);
+//比较两个结点的指数大小
+int Compare(SLTDataType e1, SLTDataType e2);
+//多项式相加
 SListNode* PolyAdd(SListNode* P1, SListNode* P2);

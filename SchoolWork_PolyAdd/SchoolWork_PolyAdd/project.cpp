@@ -1,8 +1,9 @@
 #include "project.h"
-//打印链表
-void SListPrint(SListNode* plist)
+
+//打印多项式
+void SListPrint(SListNode* head)
 {
-	SListNode* cur = plist;
+	SListNode* cur = head;
 	if (cur)
 	{
 		printf("%dx^%d", cur->coef, cur->expon);//打印第一项
@@ -32,16 +33,16 @@ SListNode* BuySLTNode(SLTDataType coef, SLTDataType expon)
 }
 
 //尾插
-void SListPushBack(SListNode** pplist, SLTDataType coef, SLTDataType expon)
+void SListPushBack(SListNode** pHead, SLTDataType coef, SLTDataType expon)
 {
 	SListNode* newnode = BuySLTNode(coef, expon);//申请一个新结点
-	if (*pplist == NULL)//判断是否为空表
+	if (*pHead == NULL)//判断是否为空表
 	{
-		*pplist = newnode;//头指针直接指向新结点
+		*pHead = newnode;//头指针直接指向新结点
 	}
 	else
 	{
-		SListNode* tail = *pplist;//接收头指针
+		SListNode* tail = *pHead;//接收头指针
 		while (tail->next != NULL)//若某结点的指针域为NULL，说明它是最后一个结点
 		{
 			tail = tail->next;////指针指向下一个结点
@@ -56,41 +57,42 @@ SListNode* InsertSortList(SListNode* head)
 	if (head == NULL || head->next == NULL)//若链表为空或链表只有一个结点，则不需排序
 		return head;
 
-	SListNode* sortHead = head;//记录排序后的第一个结点的位置
-	SListNode* cur = head->next;
-	sortHead->next = NULL;
+	SListNode* sortHead = head;//记录排序后链表的第一个结点
+	SListNode* cur = head->next;//从待排链表的第二个结点开始排序
+	sortHead->next = NULL;//默认链表的第一个结点有序，设置其指针域为空
 	while (cur)
 	{
-		SListNode* next = cur->next;
-		SListNode* p = NULL;
-		SListNode* c = sortHead;
+		SListNode* next = cur->next;//记录当前正在排序的结点的下一个结点
+		SListNode* c = sortHead;//记录当前遍历到的有序链表的结点位置
+		SListNode* p = NULL;//记录c的前一个结点位置
 		while (c)
 		{
-			if (cur->expon < c->expon)
+			if (cur->expon > c->expon)//待插入结点的指数大于当前遍历到的有序链表的结点的指数
 			{
 				break;
 			}
-			else
+			else//待插入结点与有序链表中的下一个结点比较
 			{
 				p = c;
 				c = c->next;
 			}
 		}
-		if (p == NULL)
+		if (p == NULL)//将待插入结点插入到有序链表的第一个位置
 		{
 			cur->next = sortHead;
 			sortHead = cur;
 		}
-		else
+		else//将待插入结点插入到p和c之间
 		{
 			cur->next = c;
 			p->next = cur;
 		}
-		cur = next;
+		cur = next;//插入下一个待插入结点
 	}
-	return sortHead;
+	return sortHead;//返回排列好的链表
 }
 
+//比较两个结点的指数大小
 int Compare(SLTDataType e1, SLTDataType e2)
 {
 	if (e1 > e2)
@@ -101,14 +103,15 @@ int Compare(SLTDataType e1, SLTDataType e2)
 		return 0;
 }
 
+//多项式相加
 SListNode* PolyAdd(SListNode* P1, SListNode* P2)
 {
 	//SListNode* front = (SListNode*)malloc(sizeof(SListNode));
 	//SListNode* tail = front;
-	SListNode* front = NULL;
+	SListNode* front = NULL;//相加后的链表的头指针
 	while (P1&&P2)
 	{
-		switch (Compare(P1->expon, P2->expon))
+		switch (Compare(P1->expon, P2->expon))//比较指数
 		{
 		case 1:
 			SListPushBack(&front, P1->coef, P1->expon);
@@ -127,15 +130,15 @@ SListNode* PolyAdd(SListNode* P1, SListNode* P2)
 			break;
 		}
 	}
-	while (P1)
+	while (P1)//将P1剩余项尾插到链表后面
 	{
 		SListPushBack(&front, P1->coef, P1->expon);
 		P1 = P1->next;
 	}
-	while (P2)
+	while (P2)//将P2剩余项尾插到链表后面
 	{
 		SListPushBack(&front, P2->coef, P2->expon);
 		P2 = P2->next;
 	}
-	return front;
+	return front;//返回新链表
 }
