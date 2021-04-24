@@ -1,15 +1,20 @@
 #include "project.h"
 //打印链表
-//void SListPrint(SListNode* plist)
-//{
-//	SListNode* cur = plist;//接收头指针
-//	while (cur != NULL)//判断链表是否打印完毕
-//	{
-//		printf("%d->", cur->data);//打印数据
-//		cur = cur->next;//指针指向下一个结点
-//	}
-//	printf("NULL\n");//打印NULL，表明链表最后一个结点指向NULL
-//}
+void SListPrint(SListNode* plist)
+{
+	SListNode* cur = plist;
+	if (cur)
+	{
+		printf("%dx^%d", cur->coef, cur->expon);//打印第一项
+		cur = cur->next;
+	}
+	while (cur)
+	{
+		printf("%+dx^%d", cur->coef, cur->expon);
+		cur = cur->next;
+	}
+	printf("\n");
+}
 
 //创建一个新结点，返回新结点地址
 SListNode* BuySLTNode(SLTDataType coef, SLTDataType expon)
@@ -84,4 +89,53 @@ SListNode* InsertSortList(SListNode* head)
 		cur = next;
 	}
 	return sortHead;
+}
+
+int Compare(SLTDataType e1, SLTDataType e2)
+{
+	if (e1 > e2)
+		return 1;
+	else if (e1 < e2)
+		return -1;
+	else
+		return 0;
+}
+
+SListNode* PolyAdd(SListNode* P1, SListNode* P2)
+{
+	//SListNode* front = (SListNode*)malloc(sizeof(SListNode));
+	//SListNode* tail = front;
+	SListNode* front = NULL;
+	while (P1&&P2)
+	{
+		switch (Compare(P1->expon, P2->expon))
+		{
+		case 1:
+			SListPushBack(&front, P1->coef, P1->expon);
+			P1 = P1->next;
+			break;
+		case -1:
+			SListPushBack(&front, P2->coef, P2->expon);
+			P2 = P2->next;
+			break;
+		case 0:
+			SLTDataType sum = P1->coef + P2->coef;
+			if (sum)
+				SListPushBack(&front, sum, P1->expon);
+			P1 = P1->next;
+			P2 = P2->next;
+			break;
+		}
+	}
+	while (P1)
+	{
+		SListPushBack(&front, P1->coef, P1->expon);
+		P1 = P1->next;
+	}
+	while (P2)
+	{
+		SListPushBack(&front, P2->coef, P2->expon);
+		P2 = P2->next;
+	}
+	return front;
 }

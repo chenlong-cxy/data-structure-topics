@@ -1,6 +1,6 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS 1
-#define MAX 100
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -19,3 +19,5 @@ void SListPrint(SListNode* plist);
 
 //Î²²å
 void SListPushBack(SListNode** pplist, SLTDataType coef, SLTDataType expon);
+
+SListNode* PolyAdd(SListNode* P1, SListNode* P2);
