@@ -27,7 +27,6 @@
 //	return ret;//返回目标结点
 //}
 
-
 #include <stdio.h>
 struct ListNode {
 	int val;
