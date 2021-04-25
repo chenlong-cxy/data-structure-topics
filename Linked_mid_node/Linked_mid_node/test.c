@@ -25,7 +25,6 @@
 //	return midnode;//返回中间结点
 //}
 
-
 #include <stdio.h>
 struct ListNode {
 	int val;
