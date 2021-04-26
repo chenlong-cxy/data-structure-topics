@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{248D02BD-2A7F-4D22-8404-ECBAC597DBC0}</ProjectGuid>
+    <ProjectGuid>{09ECD21F-4934-44E5-AD4D-BD30ECE58994}</ProjectGuid>
     <RootNamespace>Heap</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -65,6 +65,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="heap.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="heap.c" />
     <ClCompile Include="test.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
