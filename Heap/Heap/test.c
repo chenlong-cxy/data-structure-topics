@@ -17,10 +17,13 @@
 
 void Test2()
 {
-	int a[] = { 23, 54, 76, 34, 89, 12, 78, 34, 87, 10 };
+	int a[] = { 23, 54, 76, 33, 89, 12, 78, 34, 87, 10 };
 	int n = sizeof(a) / sizeof(a[0]);
 	HP hp;
 	HeapInit(&hp, a, n);
+	HeapPrint(&hp);
+
+	HeapPush(&hp, 10);
 	HeapPrint(&hp);
 
 	HeapDestroy(&hp);
