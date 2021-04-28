@@ -8,13 +8,13 @@
 #include <string.h>
 #include <math.h>
 
-typedef int HPDataType;
+typedef int HPDataType;//堆中存储数据的类型
 
 typedef struct Heap
 {
-	HPDataType* a;
-	int size;
-	int capacity;
+	HPDataType* a;//用于存储数据的数组
+	int size;//记录堆中已有元素个数
+	int capacity;//记录堆的容量
 }HP;
 
 //HP* HeapInit(HPDataType* a, int n);
@@ -26,14 +26,14 @@ void HeapDestroy(HP* php);
 //打印堆
 void HeapPrint(HP* php);
 
-//向堆中插入元素
+//堆的插入
 void HeapPush(HP* php, HPDataType x);
-//删除堆顶元素
+//堆的删除
 void HeapPop(HP* php);
 
-//获取堆顶元素
+//获取堆顶的数据
 HPDataType HeapTop(HP* php);
-//获取堆中元素个数
+//获取堆中数据个数
 int HeapSize(HP* php);
-//判断堆是否为空
+//堆的判空
 bool HeapEmpty(HP* php);

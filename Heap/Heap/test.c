@@ -23,8 +23,15 @@ void Test2()
 	HeapInit(&hp, a, n);
 	HeapPrint(&hp);
 
-	HeapPush(&hp, 10);
+	printf("Top:%d\n", HeapTop(&hp));
+	HeapPop(&hp);
 	HeapPrint(&hp);
+
+	//HeapPush(&hp, 10);
+	//HeapPrint(&hp);
+
+	//HeapPush(&hp, 1);
+	//HeapPrint(&hp);
 
 	HeapDestroy(&hp);
 }
