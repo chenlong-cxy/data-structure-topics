@@ -38,15 +38,17 @@ void AdjustDown(HPDataType* a, int n, int parent)
 void AdjustUp(HPDataType* a, int child)
 {
 	int parent = (child - 1) / 2;
-	while (child > 0)
+	while (child > 0)//调整到根结点的位置截止
 	{
-		if (a[child] < a[parent])
+		if (a[child] < a[parent])//孩子结点的值小于父结点的值
 		{
+			//将父结点与孩子结点交换
 			Swap(&a[child], &a[parent]);
+			//继续向上进行调整
 			child = parent;
 			parent = (child - 1) / 2;
 		}
-		else
+		else//已成堆
 		{
 			break;
 		}
@@ -81,10 +83,10 @@ void HeapDestroy(HP* php)
 {
 	assert(php);
 
-	free(php->a);
-	php->a = NULL;
-	php->size = 0;
-	php->capacity = 0;
+	free(php->a);//释放动态开辟的数组
+	php->a = NULL;//及时置空
+	php->size = 0;//元素个数置0
+	php->capacity = 0;//容量置0
 }
 
 //求结点数为n的二叉树的深度
@@ -113,14 +115,14 @@ int depth(int n)
 void HeapPrint(HP* php)
 {
 	assert(php);
-	//普通打印
+	//按照物理结构进行打印
 	int i = 0;
 	for (i = 0; i < php->size; i++)
 	{
 		printf("%d ", php->a[i]);
 	}
 	printf("\n");
-	//树形结构打印
+	//按照树形结构进行打印
 	int h = depth(php->size);
 	int N = (int)pow(2, h) - 1;//与该二叉树深度相同的满二叉树的结点总数
 	int space = N - 1;//记录每一行前面的空格数
@@ -186,9 +188,9 @@ void HeapPop(HP* php)
 	assert(php);
 	assert(!HeapEmpty(php));
 
-	Swap(&php->a[0], &php->a[php->size - 1]);
-	php->size--;
-	AdjustDown(php->a, php->size, 0);
+	Swap(&php->a[0], &php->a[php->size - 1]);//交换堆顶和最后一个结点的位置
+	php->size--;//删除最后一个结点（也就是删除原来堆顶的元素）
+	AdjustDown(php->a, php->size, 0);//向下调整
 }
 
 //获取堆顶的数据
@@ -197,7 +199,7 @@ HPDataType HeapTop(HP* php)
 	assert(php);
 	assert(!HeapEmpty(php));
 
-	return php->a[0];
+	return php->a[0];//返回堆顶数据
 }
 
 //获取堆中数据个数
@@ -205,7 +207,7 @@ int HeapSize(HP* php)
 {
 	assert(php);
 
-	return php->size;
+	return php->size;//返回堆中数据个数
 }
 
 //堆的判空
@@ -213,5 +215,5 @@ bool HeapEmpty(HP* php)
 {
 	assert(php);
 
-	return php->size == 0;
+	return php->size == 0;//判断堆中数据是否为0
 }
