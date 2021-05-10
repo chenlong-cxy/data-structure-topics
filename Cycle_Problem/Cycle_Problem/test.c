@@ -35,14 +35,14 @@ struct ListNode *detectCycle(struct ListNode *head) {
 		fast = fast->next->next;//快指针走两步
 		if (fast == slow)//相遇
 		{
-			struct ListNode* meet = fast;
+			struct ListNode* meet = fast;//相遇点
 			while (head != meet)
 			{
-				head = head->next;
-				meet = meet->next;
+				head = head->next;//一个指针从出发点开始走
+				meet = meet->next;//一个指针从相遇点开始走
 			}
-			return meet;
+			return meet;//两个指针相遇，返回当前结点
 		}
 	}
-	return NULL;
+	return NULL;//链表不带环
 }
