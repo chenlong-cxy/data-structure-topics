@@ -16,7 +16,6 @@ typedef struct Stack
 	int top;//栈顶
 	int capacity;//容量，方便增容
 }Stack;
-
 //初始化栈
 void StackInit(Stack* pst);
 //销毁栈

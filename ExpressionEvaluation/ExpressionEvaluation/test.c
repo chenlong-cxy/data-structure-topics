@@ -1,4 +1,5 @@
 #include "stack.h"
+#include "stack2.h"
 
 //中缀表达式转后缀表达式
 //void InfixToPostfix(char* str)
@@ -72,9 +73,10 @@
 //	StackDestroy(&st);
 //}
 /*中缀转后缀函数*/
-void Change(char* str)
+void Change(char* str, char* post)
 {
 	int i = 0;
+	int j = 0;
 	char e;
 	Stack st;
 	StackInit(&st);
@@ -82,12 +84,13 @@ void Change(char* str)
 	{
 		while (isdigit(str[i]))
 		{/*过滤数字字符，直接输出，直到下一位不是数字字符打印空格跳出循环 */
-			printf("%c", str[i]);
-
+			//printf("%c", str[i]);
+			post[j++] = str[i];
 			i++;
 			if (!isdigit(str[i]))
 			{
-				printf(" ");
+				//printf(" ");
+				post[j++] = ' ';
 			}
 		}
 		/*加减运算符优先级最低，如果栈顶元素为空则直接入栈，否则将栈中存储
@@ -106,7 +109,10 @@ void Change(char* str)
 					e = StackTop(&st);
 					if (e != '(')
 					{
-						printf("%c ", e);
+						//printf("%c ", e);
+						post[j++] = e;
+						post[j++] = ' ';
+
 						StackPop(&st);
 					}
 				} while (!StackEmpty(&st) && e != '(');
@@ -121,7 +127,10 @@ void Change(char* str)
 			StackPop(&st);
 			while (e != '(')
 			{
-				printf("%c ", e);
+				//printf("%c ", e);
+				post[j++] = e;
+				post[j++] = ' ';
+
 				e = StackTop(&st);
 				StackPop(&st);
 			}
@@ -147,18 +156,98 @@ void Change(char* str)
 	{
 		e = StackTop(&st);
 		StackPop(&st);
-		printf("%c ", e);
+		//printf("%c ", e);
+		post[j++] = e;
+		post[j++] = ' ';
 	}
+	post[j] = '\0';
+	StackDestroy(&st);
 }
 
+double Calculate(double Op1, double Op2, char Opr)
+{
+	double ret = 0;
+	switch (Opr)
+	{
+	case '+':
+		ret = Op1 + Op2;
+		break;
+	case '-':
+		ret = Op1 - Op2;
+		break;
+	case '*':
+		ret = Op1*Op2;
+		break;
+	case '/':
+		ret = Op1 / Op2;
+		break;
+	default:
+		printf("error\n");
+		exit(-1);
+	}
+	return ret;
+}
 
+double PostFixExp(char* post)
+{
+	double ret = 0;
+	Stack2 st;
+	StackInit2(&st);
+	while (*post != '\0')
+	{
+		if (isdigit(*post))//是数字
+		{
+			double num = atof(post);
+			StackPush2(&st, num);
+			while (*post != ' ')
+				post++;
+		}
+		else//是运算符
+		{
+			double Op2 = StackTop2(&st);
+			StackPop2(&st);
+			double Op1 = StackTop2(&st);
+			StackPop2(&st);
+			ret = Calculate(Op1, Op2, *post);
+			StackPush2(&st, ret);
+			post++;
+		}
+		post++;
+	}
+
+	StackDestroy2(&st);
+	return ret;
+}
+void test(char* post)
+{
+	double num = atof(post);
+	printf("%lf\n", num);
+	post += 2;
+
+	num = atof(post);
+	printf("%lf\n", num);
+	post += 2;
+
+	num = atof(post);
+	printf("%lf\n", num);
+	post += 2;
+
+	num = atof(post);
+	printf("%lf\n", num);
+	post += 2;
+
+	printf("%c\n", *post);
+}
 int main()
 {
 	char str[MAX];
 	char post[MAX];
 	gets(str);
 	//InfixToPostfix(str);
-	Change(str);
-	
+	Change(str, post);
+	printf("后缀表达式为:%s\n", post);
+	//test(post);
+	double ret = PostFixExp(post);
+	printf("计算结果为:%.2lf\n", ret);
 	return 0;
 }
