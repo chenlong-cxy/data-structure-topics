@@ -20,7 +20,7 @@ void SListPrint(SListNode* head);
 SListNode* BuySLTNode(SLTDataType coef, SLTDataType expon);
 //尾插
 void SListPushBack(SListNode** pHead, SLTDataType coef, SLTDataType expon);
-//选择排序
+//插入排序
 SListNode* InsertSortList(SListNode* head);
 //比较两个结点的指数大小
 int Compare(SLTDataType e1, SLTDataType e2);

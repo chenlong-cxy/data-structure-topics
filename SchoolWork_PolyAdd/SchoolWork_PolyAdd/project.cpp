@@ -51,7 +51,7 @@ void SListPushBack(SListNode** pHead, SLTDataType coef, SLTDataType expon)
 	}
 }
 
-//选择排序
+//插入排序
 SListNode* InsertSortList(SListNode* head)
 {
 	if (head == NULL || head->next == NULL)//若链表为空或链表只有一个结点，则不需排序
