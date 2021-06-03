@@ -56,7 +56,7 @@ BTNode* Delete(BTNode* root, BTDataType x)
 			{
 				BTNode* LMax = FindMax(root->left);
 				root->data = LMax->data;
-				root->left = Delete(root->left, LMax->data);
+				root->left = Delete(root->left, root->data);
 			}
 			else
 			{
@@ -198,5 +198,6 @@ void BinaryLevelOrder(BTNode* root)
 			QueuePush(&q, front->right);//出队元素的右孩子入队列
 		}
 	}
+	printf("\n");
 	QueueDestroy(&q);//销毁队列
 }
