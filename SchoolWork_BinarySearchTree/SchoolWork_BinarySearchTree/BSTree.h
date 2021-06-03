@@ -13,7 +13,7 @@ typedef struct BTNode
 //≤Â»Î
 BTNode* Insert(BTNode* root, BTDataType x);
 //…æ≥˝
-void Delete(BTNode* root, BTDataType x);
+BTNode* Delete(BTNode* root, BTDataType x);
 
 //≤È’“£®µ›πÈ£©
 BTNode* Find(BTNode* root, BTDataType x);

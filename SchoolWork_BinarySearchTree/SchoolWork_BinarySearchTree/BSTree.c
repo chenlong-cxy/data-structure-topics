@@ -37,9 +37,41 @@ BTNode* Insert(BTNode* root, BTDataType x)
 	}
 }
 //删除
-void Delet(BTNode* root, BTDataType x)
+BTNode* Delete(BTNode* root, BTDataType x)
 {
-
+	if (root == NULL)
+	{
+		printf("要删除的元素不存在\n");
+	}
+	else
+	{
+		if (x > root->data)
+			root->right = Delete(root->right, x);
+		else if (x < root->data)
+			root->left = Delete(root->left, x);
+		// 找到了要删除的元素
+		else
+		{
+			if (root->left&&root->right)
+			{
+				BTNode* LMax = FindMax(root->left);
+				root->data = LMax->data;
+				root->left = Delete(root->left, LMax->data);
+			}
+			else
+			{
+				BTNode* tmp = root;
+				if (root->left)
+					root = root->left;
+				else if (root->right)
+					root = root->right;
+				else
+					root = NULL;
+				free(tmp);
+			}
+		}
+	}
+	return root;
 }
 
 //查找（递归）
@@ -55,17 +87,67 @@ BTNode* Find(BTNode* root, BTDataType x)
 }
 
 //查找（非递归）
-BTNode* FindNonR(BTNode* root, BTDataType x);
+BTNode* FindNonR(BTNode* root, BTDataType x)
+{
+	while (root)
+	{
+		if (x < root->data)
+			root = root->left;
+		else if (x > root->data)
+			root = root->right;
+		else
+			return root;
+	}
+	return NULL;
+}
 
 //查找最大元素（递归）
-BTNode* FindMax(BTNode* root);
+BTNode* FindMax(BTNode* root)
+{
+	if (root == NULL)
+		return NULL;
+	else if (root->right == NULL)
+	{
+		return root;
+	}
+	else
+		return FindMax(root->right);
+}
 //查找最大元素（非递归）
-BTNode* FindMaxNonR(BTNode* root);
+BTNode* FindMaxNonR(BTNode* root)
+{
+	if (root)
+	{
+		while (root->right)
+			root = root->right;
+		return root;
+	}
+	return NULL;
+}
 
 //查找最小元素（递归）
-BTNode* FindMin(BTNode* root);
+BTNode* FindMin(BTNode* root)
+{
+	if (root == NULL)
+		return NULL;
+	else if (root->left == NULL)
+	{
+		return root;
+	}
+	else
+		return FindMin(root->left);
+}
 //查找最小元素（非递归）
-BTNode* FindMinNonR(BTNode* root);
+BTNode* FindMinNonR(BTNode* root)
+{
+	if (root)
+	{
+		while (root->left)
+			root = root->left;
+		return root;
+	}
+	return NULL;
+}
 
 ////层序遍历
 //void BinaryLevelOrder(BTNode* root)
