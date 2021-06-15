@@ -1,28 +1,32 @@
 #include "HTree.h"
 
+int main()
+{
+	int n = 0;
+	printf("请输入数据个数:>");
+	scanf("%d", &n);
+	DataType* w = (DataType*)malloc(sizeof(DataType)*n);
+	if (w == NULL)
+	{
+		printf("malloc fail\n");
+		exit(-1);
+	}
+	printf("请输入数据:>");
+	for (int i = 0; i < n; i++)
+	{
+		/*scanf("%d", &w[i]);*/
+		scanf("%lf", &w[i]);
+	}
+	HuffmanTree HT;
+	CreateHuff(HT, w, n); //构建哈夫曼树
 
+	HuffmanCode HC;
+	HuffCoding(HT, HC, n); //构建哈夫曼编码
 
-
-
-p = m; cdlen = 0;
-for (i = 1; i <= m; ++i) HT[i].weight = 0; //用作结点状态标志
-while (p){
-	if (HT[p].weight == 0){
-		HT[p].weight = 1; //向左
-		if (HT[p].lchild != 0) { p = HT[p].lchild; cd[cdlen++] = '0'; }
-		else if (HT[p].rchild == 0){
-			HC[p] = (char *)malloc((cdlen + 1)*sizeof(char));
-			cd[cdlen] = '\0';
-			strcpy(HC[p], cd];
-		}
-	}//if
-	else if (HT[p].weight == 1){
-		HT[p].weight = 2;  //向右
-		if (HT[p].rchild != 0){
-			p = HT[p].rchild; cd[cdlen++] = '1';
-		}
-		else{
-			HT[p].weight = 0;
-			p = HT[p].parent; --cdlen;
-		}//else
-	}//while
+	for (int i = 1; i <= n; i++)
+	{
+		printf("数据%.2lf的编码为:%s\n", HT[i].weight, HC[i]);
+	}
+	free(w);
+	return 0;
+}

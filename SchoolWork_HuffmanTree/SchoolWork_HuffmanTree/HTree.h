@@ -1,16 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+typedef double DataType;
 
-typedef struct{
-	int   weight;   //权值
-	int   parent;    //双亲
-	int   lchild, rchild; //左右孩子
-}HTNode, *HuffmanTree;
+typedef struct HTNode
+{
+	DataType weight; //权值
+	int parent; //双亲
+	int lc, rc; //左右孩子
+}*HuffmanTree;
 
-void CreateHuff()
+typedef char **HuffmanCode;
 
+//构建哈夫曼树
+void CreateHuff(HuffmanTree& HT, DataType* w, int n);
+//生成哈夫曼编码
+void HuffCoding(HuffmanTree& HT, HuffmanCode& HC, int n);
 //typedef char  **HuffmanCode; //动态分配数组存储赫夫曼编码表
 
 //void HuffmanCoding(HuffmanTree &HT, HuffmanCode &HC, int *w, int n);
