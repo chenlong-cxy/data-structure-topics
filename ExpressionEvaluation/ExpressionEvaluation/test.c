@@ -164,6 +164,7 @@ void Change(char* str, char* post)
 	StackDestroy(&st);
 }
 
+//传入两个操作数和一个操作符，返回计算结果
 double Calculate(double Op1, double Op2, char Opr)
 {
 	double ret = 0;
@@ -188,11 +189,12 @@ double Calculate(double Op1, double Op2, char Opr)
 	return ret;
 }
 
+//后缀表达式求值
 double PostFixExp(char* post)
 {
 	double ret = 0;
 	Stack2 st;
-	StackInit2(&st);
+	StackInit2(&st); //初始化栈
 	while (*post != '\0')
 	{
 		if (isdigit(*post))//是数字
@@ -214,7 +216,6 @@ double PostFixExp(char* post)
 		}
 		post++;
 	}
-
 	StackDestroy2(&st);
 	return ret;
 }
