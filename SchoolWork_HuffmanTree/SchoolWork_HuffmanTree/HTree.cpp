@@ -1,6 +1,6 @@
 #include "HTree.h"
 
-//在下标为1到i-1的范围找到权重最小的两个值的下标，其中s1的权重小于s2的权重
+//在下标为1到i-1的范围找到权值最小的两个值的下标，其中s1的权值小于s2的权值
 void Select(HuffmanTree& HT, int n, int& s1, int& s2)
 {
 	int min;
@@ -49,7 +49,7 @@ void CreateHuff(HuffmanTree& HT, DataType* w, int n)
 	{
 		//选择权值最小的s1和s2，生成它们的父结点
 		int s1, s2;
-		Select(HT, i - 1, s1, s2); //在下标为1到i-1的范围找到权值最小的两个值的下标，其中s1的权值小于s2的权重
+		Select(HT, i - 1, s1, s2); //在下标为1到i-1的范围找到权值最小的两个值的下标，其中s1的权值小于s2的权值
 		HT[i].weight = HT[s1].weight + HT[s2].weight; //i的权重是s1和s2的权重之和
 		HT[s1].parent = i; //s1的父亲是i
 		HT[s2].parent = i; //s2的父亲是i
