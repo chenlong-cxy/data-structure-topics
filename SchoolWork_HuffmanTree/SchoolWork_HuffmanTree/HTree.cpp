@@ -71,7 +71,7 @@ void CreateHuff(HuffmanTree& HT, DataType* w, int n)
 //生成哈夫曼编码
 void HuffCoding(HuffmanTree& HT, HuffmanCode& HC, int n)
 {
-	HC = (HuffmanCode)malloc(sizeof(char*)*(n + 1)); //开n+1个字符指针，因为下标为0的字符不用
+	HC = (HuffmanCode)malloc(sizeof(char*)*(n + 1)); //开n+1个空间，因为下标为0的空间不用
 	char* code = (char*)malloc(sizeof(char)*n); //辅助空间，编码最长为n(最长时，前n-1个用于存储数据，最后1个用于存放'\0')
 	code[n - 1] = '\0'; //辅助空间最后一个位置为'\0'
 	for (int i = 1; i <= n; i++)
