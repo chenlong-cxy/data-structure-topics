@@ -23,7 +23,7 @@ int main()
 	HuffmanCode HC;
 	HuffCoding(HT, HC, n); //构建哈夫曼编码
 
-	for (int i = 1; i <= n; i++)
+	for (int i = 1; i <= n; i++) //打印哈夫曼编码
 	{
 		printf("数据%.2lf的编码为:%s\n", HT[i].weight, HC[i]);
 	}

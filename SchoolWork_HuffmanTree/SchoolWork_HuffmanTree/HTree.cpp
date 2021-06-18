@@ -76,7 +76,7 @@ void HuffCoding(HuffmanTree& HT, HuffmanCode& HC, int n)
 	code[n - 1] = '\0'; //辅助空间最后一个位置为'\0'
 	for (int i = 1; i <= n; i++)
 	{
-		int start = n - 1; //从辅助空间下标为start的位置开始为有效编码
+		int start = n - 1; //每次生成数据的哈夫曼编码之前，先将start指针指向'\0'
 		int c = i; //正在进行的第i个数据的编码
 		int p = HT[c].parent; //找到该数据的父结点
 		while (p) //直到父结点为0，即父结点为根结点时，停止
@@ -89,7 +89,7 @@ void HuffCoding(HuffmanTree& HT, HuffmanCode& HC, int n)
 			p = HT[c].parent; //c的父结点
 		}
 		HC[i] = (char*)malloc(sizeof(char)*(n - start)); //开辟用于存储编码的内存空间
-		strcpy(HC[i], &code[start]); //将编码拷贝到相应的内存空间中
+		strcpy(HC[i], &code[start]); //将编码拷贝到字符指针数组中的相应位置
 	}
 	free(code); //释放辅助空间
 }

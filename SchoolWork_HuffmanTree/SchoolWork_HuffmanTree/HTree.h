@@ -12,7 +12,7 @@ typedef struct HTNode //单个结点的信息
 	int lc, rc; //左右孩子
 }*HuffmanTree;
 
-typedef char **HuffmanCode;
+typedef char **HuffmanCode; //字符指针数组中存储的元素类型
 
 //构建哈夫曼树
 void CreateHuff(HuffmanTree& HT, DataType* w, int n);
