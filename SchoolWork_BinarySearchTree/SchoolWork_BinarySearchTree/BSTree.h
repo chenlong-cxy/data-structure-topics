@@ -32,3 +32,5 @@ BTNode* FindMinNonR(BTNode* root);
 
 //²ãÐò±éÀú
 void BinaryLevelOrder(BTNode* root);
+//ÖÐÐò±éÀú
+void BinaryInOrder(BTNode* root);

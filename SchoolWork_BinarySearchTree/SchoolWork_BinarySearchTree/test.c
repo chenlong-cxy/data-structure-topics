@@ -56,11 +56,19 @@ void Test2()
 	p = Insert(p, 50);
 	p = Insert(p, 33);
 	printf("原二叉搜索树为:>\n");
+	printf("层序遍历:>");
 	BinaryLevelOrder(p);
+	printf("中序遍历:>");
+	BinaryInOrder(p);
+	printf("\n");
 
 	p = Insert(p, 35);
 	printf("插入元素35后:>\n");
+	printf("层序遍历:>");
 	BinaryLevelOrder(p);
+	printf("中序遍历:>");
+	BinaryInOrder(p);
+	printf("\n");
 
 	// 递归测试
 	//BTNode* pmax = FindMax(p);
@@ -74,9 +82,9 @@ void Test2()
 	// 要删除的是叶结点
 	//TestDelete1(p);
 	// 要删除的结点只有一个孩子结点
-	//TestDelete2(p);
+	TestDelete2(p);
 	// 要删除的结点有左、右两棵子树
-	TestDelete3(p);
+	//TestDelete3(p);
 }
 
 int main()

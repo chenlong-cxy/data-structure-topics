@@ -201,3 +201,16 @@ void BinaryLevelOrder(BTNode* root)
 	printf("\n");
 	QueueDestroy(&q);//销毁队列
 }
+
+//中序遍历
+void BinaryInOrder(BTNode* root)
+{
+	if (root == NULL)
+		return;
+	else
+	{
+		BinaryInOrder(root->left);
+		printf("%d ", root->data);
+		BinaryInOrder(root->right);
+	}
+}
