@@ -33,7 +33,11 @@ void TestDelete2(BTNode* p)
 {
 	printf("删除只有一个孩子的结点33后:>\n");
 	p = Delete(p, 33);
-	BinaryLevelOrder(p);
+	//BinaryLevelOrder(p);
+
+	printf("中序遍历:>");
+	BinaryInOrder(p);
+	printf("\n");
 }
 // 要删除的结点有左、右两棵子树
 void TestDelete3(BTNode* p)
@@ -55,17 +59,17 @@ void Test2()
 	p = Insert(p, 41);
 	p = Insert(p, 50);
 	p = Insert(p, 33);
-	printf("原二叉搜索树为:>\n");
-	printf("层序遍历:>");
-	BinaryLevelOrder(p);
+	printf("创建的二叉搜索树为:>\n");
+	//printf("层序遍历:>");
+	//BinaryLevelOrder(p);
 	printf("中序遍历:>");
 	BinaryInOrder(p);
 	printf("\n");
 
 	p = Insert(p, 35);
 	printf("插入元素35后:>\n");
-	printf("层序遍历:>");
-	BinaryLevelOrder(p);
+	//printf("层序遍历:>");
+	//BinaryLevelOrder(p);
 	printf("中序遍历:>");
 	BinaryInOrder(p);
 	printf("\n");
@@ -74,10 +78,10 @@ void Test2()
 	//BTNode* pmax = FindMax(p);
 	//BTNode* pmin = FindMin(p);
 	// 非递归测试
-	BTNode* pmax = FindMaxNonR(p);
-	BTNode* pmin = FindMinNonR(p);
-	printf("最大元素为:>%d\n", pmax->data);
-	printf("最小元素为:>%d\n", pmin->data);
+	//BTNode* pmax = FindMaxNonR(p);
+	//BTNode* pmin = FindMinNonR(p);
+	//printf("最大元素为:>%d\n", pmax->data);
+	//printf("最小元素为:>%d\n", pmin->data);
 
 	// 要删除的是叶结点
 	//TestDelete1(p);
