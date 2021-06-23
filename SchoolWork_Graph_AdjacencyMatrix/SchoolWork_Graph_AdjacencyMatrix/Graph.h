@@ -3,13 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MaxVertexNum 8  //最大顶点数(矩阵的阶数)
-#define MaxSize 100
-int visited1[MaxSize]; //用于DFS
-int visited2[MaxSize]; //用于BFS
+#define MaxVertexNum 100  //最大顶点数
+int visited1[MaxVertexNum]; //用于DFS
+int visited2[MaxVertexNum]; //用于BFS
 
-typedef int WeightType;
-typedef char DataType;
+typedef int WeightType; //权重的类型
+typedef char DataType; //顶点的数据类型
 
 //图结点的定义
 typedef struct GNode

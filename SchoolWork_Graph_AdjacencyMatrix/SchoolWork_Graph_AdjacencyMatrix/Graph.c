@@ -22,6 +22,7 @@ GNode* CreateGraph(int VertexNum)
 			Graph->G[i][j] = 0;
 		}
 	}
+	//顶点数据初始化为字符'0'
 	for (i = 0; i < Graph->Nv; i++)
 	{
 		Graph->Data[i] = '0';
@@ -58,13 +59,13 @@ GNode* BuildGraph()
 		int i = 0;
 		for (i = 0; i < Graph->Ne; i++)
 		{
-			scanf("%d %d %d", &(Edge->V1), &(Edge->V2), &(Edge->Weight));
-			InsertEdge(Graph, Edge);
+			scanf("%d %d %d", &(Edge->V1), &(Edge->V2), &(Edge->Weight)); //读取边的数据
+			InsertEdge(Graph, Edge); //插入边
 		}
 		free(Edge); //释放辅助空间
 	}
 	printf("请输入顶点的数据:>");
-	getchar();
+	getchar(); //吃掉缓冲区的'\n'
 	int i = 0;
 	for (i = 0; i < Graph->Nv; i++)
 	{
@@ -91,18 +92,18 @@ void Print(GNode** pg)
 //深度优先搜索
 void DFS(GNode** pg, Vertex v) //从顶点v开始进行深度优先搜索
 {
-	if (v < 0 || v >= (*pg)->Nv)
+	if (v < 0 || v >= (*pg)->Nv) //检测v的合法性
 	{
 		printf("位置出错\n");
 		exit(-1);
 	}
 	printf("点%c正在被访问...\n", (*pg)->Data[v]);
-	visited1[v] = 1;
+	visited1[v] = 1; //将顶点v标记为已访问
 	for (int j = 0; j < (*pg)->Nv; j++)
 	{
-		if (visited1[j] == 0 && (*pg)->G[v][j] != 0)
+		if (visited1[j] == 0 && (*pg)->G[v][j] != 0) //顶点j没有被访问过并且顶点v和顶点j之间有边
 		{
-			DFS(pg, j);
+			DFS(pg, j); //深度优先搜索顶点j
 		}
 	}
 }
@@ -110,29 +111,29 @@ void DFS(GNode** pg, Vertex v) //从顶点v开始进行深度优先搜索
 //广度优先搜索
 void BFS(GNode** pg, Vertex v)
 {
-	if (v < 0 || v >= (*pg)->Nv)
+	if (v < 0 || v >= (*pg)->Nv) //检测v的合法性
 	{
 		printf("位置出错\n");
 		exit(-1);
 	}
 	Queue q;
-	QueueInit(&q);
+	QueueInit(&q); //初始化队列
 	printf("点%c正在被访问...\n", (*pg)->Data[v]);
-	visited2[v] = 1;
-	QueuePush(&q, v);
+	visited2[v] = 1; //将顶点v标记为已访问
+	QueuePush(&q, v); //顶点v入队列
 	while (!QueueEmpty(&q))
 	{
-		Vertex front = QueueFront(&q);
-		QueuePop(&q);
+		Vertex front = QueueFront(&q); //获取队头元素
+		QueuePop(&q); //队头出队列
 		for (int j = 0; j < (*pg)->Nv; j++)
 		{
-			if (visited2[j] == 0 && (*pg)->G[front][j] != 0)
+			if (visited2[j] == 0 && (*pg)->G[front][j] != 0) //顶点j没有被访问过并且顶点front和顶点j之间有边
 			{
 				printf("点%c正在被访问...\n", (*pg)->Data[j]);
-				visited2[j] = 1;
-				QueuePush(&q, j);
+				visited2[j] = 1; //将顶点j标记为已访问
+				QueuePush(&q, j); //顶点j入队列
 			}
 		}
 	}
-	QueueDestroy(&q);
+	QueueDestroy(&q); //销毁队列
 }
