@@ -25,6 +25,56 @@ public:
 		:_root(nullptr)
 	{}
 
+	//拷贝树
+	Node* _Copy(Node* root)
+	{
+		if (root == nullptr)
+			return nullptr;
+
+		Node* copyNode = new Node(root->_key);
+		copyNode->_left = _Copy(root->_left);
+		copyNode->_right = _Copy(root->_right);
+		return copyNode;
+	}
+	//拷贝构造函数
+	BSTree(const BSTree<K>& t)
+	{
+		_root = _Copy(t._root);
+	}
+
+	//赋值运算符重载函数
+	BSTree<K>& operator=(BSTree<K> t)
+	{
+		swap(_root, t._root);
+		return *this;
+	}
+
+	//const BSTree<K>& operator=(const BSTree<K>& t)
+	//{
+	//	if (this != &t)
+	//	{
+	//		_root = _Copy(t._root);
+	//	}
+	//	return *this;
+	//}
+
+	//析构函数的子函数
+	void _Destory(Node* root)
+	{
+		if (root == nullptr)
+			return;
+
+		_Destory(root->_left);
+		_Destory(root->_right);
+		delete root;
+	}
+	//析构函数
+	~BSTree()
+	{
+		_Destory(_root);
+		_root = nullptr;
+	}
+
 	//插入函数
 	bool Insert(const K& key)
 	{
@@ -171,11 +221,55 @@ public:
 	//	return false;
 	//}
 
-	//递归删除函数1
-	bool EraseR(const K& key)
-	{
-		 
-	}
+	////递归删除函数1的子函数(待查)
+	//bool _EraseR(Node*& root, const K& key)
+	//{
+	//	if (root == nullptr)
+	//		return false;
+
+	//	if (key < root->_key)
+	//		return _EraseR(root->_left, key);
+	//	else if (key > root->_key)
+	//		return _EraseR(root->_right, key);
+	//	else
+	//	{
+	//		//找到了
+	//		if (root->_left == nullptr)
+	//		{
+	//			Node* del = root;
+	//			root = root->_right;
+	//			delete del;
+	//		}
+	//		else if (root->_right == nullptr)
+	//		{
+	//			Node* del = root;
+	//			root = root->_left;
+	//			delete del;
+	//		}
+	//		else
+	//		{
+	//			Node* minParent = root;
+	//			Node* minRight = root->_right;
+	//			while (minRight->_left)
+	//			{
+	//				minParent = minRight;
+	//				minRight = minRight->_left;
+	//			}
+	//			root->_key = minRight->_key;
+	//			if (minRight == minParent->_left)
+	//				minParent->_left = minRight->_right;
+	//			else
+	//				minParent->_right = minRight->_right;
+	//			delete minRight;
+	//		}
+	//		return true;
+	//	}
+	//}
+	////递归删除函数1
+	//bool EraseR(const K& key)
+	//{
+	//	return _EraseR(_root, key);
+	//}
 
 	//删除函数2
 	bool Erase(const K& key)
@@ -251,6 +345,51 @@ public:
 			}
 		}
 		return false;
+	}
+
+	//递归删除函数2的子函数
+	bool _EraseR(Node*& root, const K& key)
+	{
+		if (root == nullptr)
+			return false;
+
+		if (key < root->_key)
+			return _EraseR(root->_left, key);
+		else if (key > root->_key)
+			return _EraseR(root->_right, key);
+		else
+		{
+			//找到了
+			if (root->_left == nullptr)
+			{
+				Node* del = root;
+				root = root->_right;
+				delete del;
+			}
+			else if (root->_right == nullptr)
+			{
+				Node* del = root;
+				root = root->_left;
+				delete del;
+			}
+			else
+			{
+				Node* minRight = root->_right;
+				while (minRight->_left)
+				{
+					minRight = minRight->_left;
+				}
+				K minKey = minRight->_key;
+				_EraseR(root->_right, minKey);
+				root->_key = minKey;
+			}
+			return true;
+		}
+	}
+	//递归删除函数2
+	bool EraseR(const K& key)
+	{
+		return _EraseR(_root, key);
 	}
 
 	//查找函数
