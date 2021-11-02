@@ -4,10 +4,11 @@ using namespace std;
 template<class K>
 struct BSTreeNode
 {
-	K _key;
-	BSTreeNode<K>* _left;
-	BSTreeNode<K>* _right;
+	K _key;                 //结点值
+	BSTreeNode<K>* _left;   //左指针 
+	BSTreeNode<K>* _right;  //右指针
 
+	//构造一个值为key，左右指针为空的结点
 	BSTreeNode(const K& key = 0)
 		:_key(key)
 		, _left(nullptr)
@@ -43,12 +44,14 @@ public:
 	}
 
 	//赋值运算符重载函数
+	//现代写法
 	BSTree<K>& operator=(BSTree<K> t)
 	{
 		swap(_root, t._root);
 		return *this;
 	}
 
+	//传统写法
 	//const BSTree<K>& operator=(const BSTree<K>& t)
 	//{
 	//	if (this != &t)
@@ -448,7 +451,7 @@ public:
 		cout << endl;
 	}
 private:
-	Node* _root;
+	Node* _root; //二叉搜索树的根结点
 };
 
 
