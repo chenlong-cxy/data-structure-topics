@@ -29,113 +29,121 @@ public:
 	//拷贝树
 	Node* _Copy(Node* root)
 	{
-		if (root == nullptr)
+		if (root == nullptr) //空树直接返回
 			return nullptr;
 
-		Node* copyNode = new Node(root->_key);
-		copyNode->_left = _Copy(root->_left);
-		copyNode->_right = _Copy(root->_right);
-		return copyNode;
+		Node* copyNode = new Node(root->_key); //拷贝根结点
+		copyNode->_left = _Copy(root->_left); //拷贝左子树
+		copyNode->_right = _Copy(root->_right); //拷贝右子树
+		return copyNode; //返回拷贝的树
 	}
 	//拷贝构造函数
 	BSTree(const BSTree<K>& t)
 	{
-		_root = _Copy(t._root);
+		_root = _Copy(t._root); //拷贝t对象的二叉搜索树
 	}
 
 	//赋值运算符重载函数
 	//现代写法
-	BSTree<K>& operator=(BSTree<K> t)
+	BSTree<K>& operator=(BSTree<K> t) //编译器接收右值的时候自动调用拷贝构造函数
 	{
-		swap(_root, t._root);
-		return *this;
+		swap(_root, t._root); //交换这两个对象的二叉搜索树
+		return *this; //支持连续赋值
 	}
 
-	//传统写法
+	////传统写法
 	//const BSTree<K>& operator=(const BSTree<K>& t)
 	//{
-	//	if (this != &t)
+	//	if (this != &t) //防止自己给自己赋值
 	//	{
-	//		_root = _Copy(t._root);
+	//		_root = _Copy(t._root); //拷贝t对象的二叉搜索树
 	//	}
-	//	return *this;
+	//	return *this; //支持连续赋值
 	//}
 
-	//析构函数的子函数
+	//释放树中结点
 	void _Destory(Node* root)
 	{
-		if (root == nullptr)
+		if (root == nullptr) //空树无需释放
 			return;
 
-		_Destory(root->_left);
-		_Destory(root->_right);
-		delete root;
+		_Destory(root->_left); //释放左子树中的结点
+		_Destory(root->_right); //释放右子树中的结点
+		delete root; //释放根结点
 	}
 	//析构函数
 	~BSTree()
 	{
-		_Destory(_root);
-		_root = nullptr;
+		_Destory(_root); //释放二叉搜索树中的结点
+		_root = nullptr; //及时置空
 	}
 
 	//插入函数
 	bool Insert(const K& key)
 	{
-		if (_root == nullptr)
+		if (_root == nullptr) //空树
 		{
-			_root = new Node(key);
-			return true;
+			_root = new Node(key); //直接申请值为key的结点作为二叉搜索树的根结点
+			return true; //插入成功，返回true
 		}
 		Node* parent = nullptr;
 		Node* cur = _root;
 		while (cur)
 		{
-			if (key < cur->_key)
+			if (key < cur->_key) //key值小于当前结点的值
 			{
+				//往该结点的左子树走
 				parent = cur;
 				cur = cur->_left;
 			}
-			else if (key > cur->_key)
+			else if (key > cur->_key) //key值大于当前结点的值
 			{
+				//往该结点的右子树走
 				parent = cur;
 				cur = cur->_right;
 			}
-			else
+			else //key值等于当前结点的值
 			{
-				return false;
+				return false; //插入失败，返回false
 			}
 		}
-		cur = new Node(key);
-		if (key < parent->_key)
+		cur = new Node(key); //申请值为key的结点
+		if (key < parent->_key) //key值小于当前parent结点的值
 		{
-			parent->_left = cur;
+			parent->_left = cur; //将结点连接到parent的左边
 		}
-		else
+		else //key值大于当前parent结点的值
 		{
-			parent->_right = cur;
+			parent->_right = cur; //将结点连接到parent的右边
 		}
-		return true;
+		return true; //插入成功，返回true
 	}
 	//递归插入函数的子函数
 	bool _InsertR(Node*& root, const K& key) //注意引用
 	{
-		if (root == nullptr)
+		if (root == nullptr) //空树
 		{
-			root = new Node(key);
-			return true;
+			root = new Node(key); //直接申请值为key的结点作为树的根结点
+			return true; //插入成功，返回true
 		}
 
-		if (key < root->_key)
-			return _Insert(root->_left, key);
-		else if (key > root->_key)
-			return _Insert(root->_right, key);
-		else
-			return false;
+		if (key < root->_key) //key值小于根结点的值
+		{
+			return _InsertR(root->_left, key); //应将结点插入到左子树当中
+		}
+		else if (key > root->_key) //key值大于根结点的值
+		{
+			return _InsertR(root->_right, key); //应将结点插入到右子树当中
+		}
+		else //key值等于根结点的值
+		{
+			return false; //插入失败，返回false
+		}
 	}
 	//递归插入函数
 	bool InsertR(const K& key)
 	{
-		return _Insert(_root, key);
+		return _InsertR(_root, key); //调用子函数进行插入
 	}
 	//删除函数1
 	//bool Erase(const K& key)
@@ -440,9 +448,9 @@ public:
 	{
 		if (root == nullptr)
 			return;
-		_InOrder(root->_left);
-		cout << root->_key << " ";
-		_InOrder(root->_right);
+		_InOrder(root->_left); //遍历左子树
+		cout << root->_key << " "; //遍历根结点
+		_InOrder(root->_right); //遍历右子树
 	}
 	//中序遍历
 	void InOrder()
@@ -458,8 +466,54 @@ private:
 
 
 
+////结点类
+//template<class K>
+//struct BSTreeNode
+//{
+//	K _key;                 //结点值
+//	BSTreeNode<K>* _left;   //左指针 
+//	BSTreeNode<K>* _right;  //右指针
+//
+//	//构造函数
+//	BSTreeNode(const K& key = 0)
+//		:_key(key)
+//		, _left(nullptr)
+//		, _right(nullptr)
+//	{}
+//};
 
-
+////二叉搜索树
+//template<class K>
+//class BSTree
+//{
+//	typedef BSTreeNode<K> Node;
+//public:
+//	//构造函数
+//	BSTree();
+//
+//	//拷贝构造函数
+//	BSTree(const BSTree<K>& t);
+//
+//	//赋值运算符重载函数
+//	BSTree<K>& operator=(BSTree<K> t);
+//
+//	//析构函数
+//	~BSTree();
+//
+//	//插入函数
+//	bool Insert(const K& key);
+//
+//	//删除函数
+//	bool Erase(const K& key);
+//
+//	//查找函数
+//	Node* Find(const K& key);
+//
+//	//中序遍历
+//	void InOrder();
+//private:
+//	Node* _root; //指向二叉搜索树的根结点
+//};
 
 
 
