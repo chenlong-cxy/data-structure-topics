@@ -10,43 +10,44 @@ int main()
 	}
 	t.InOrder();
 
-	BSTree<int> c(t);
-	c.Insert(10);
-	c.InOrder();
+	//BSTree<int> c(t);
+	//c.Insert(10);
+	//c.InOrder();
 
-	BSTree<int> f;
-	f = t;
-	f.Insert(11);
-	f.InOrder();
-	//t.EraseR(5);
-	//t.InOrder();
+	//BSTree<int> f;
+	//f = t;
+	//f.Insert(11);
+	//f.InOrder();
 
-	//t.EraseR(3);
-	//t.InOrder();
+	t.EraseR(5);
+	t.InOrder();
 
-	//t.EraseR(4);
-	//t.InOrder();
+	t.EraseR(3);
+	t.InOrder();
 
-	//t.EraseR(1);
-	//t.InOrder();
+	t.EraseR(4);
+	t.InOrder();
 
-	//t.EraseR(7);
-	//t.InOrder();
+	t.EraseR(1);
+	t.InOrder();
 
-	//t.EraseR(8);
-	//t.InOrder();
+	t.EraseR(7);
+	t.InOrder();
 
-	//t.EraseR(2);
-	//t.InOrder();
+	t.EraseR(8);
+	t.InOrder();
 
-	//t.EraseR(6);
-	//t.InOrder();
+	t.EraseR(2);
+	t.InOrder();
 
-	//t.EraseR(9);
-	//t.InOrder();
+	t.EraseR(6);
+	t.InOrder();
 
-	//t.EraseR(0);
-	//t.InOrder();
+	t.EraseR(9);
+	t.InOrder();
+
+	t.EraseR(0);
+	t.InOrder();
 	//for (auto e : arr)
 	//{
 	//	t.Erase(e);

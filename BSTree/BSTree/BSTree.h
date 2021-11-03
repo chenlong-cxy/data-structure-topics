@@ -146,6 +146,147 @@ public:
 		return _InsertR(_root, key); //调用子函数进行插入
 	}
 	//删除函数1
+	bool Erase(const K& key)
+	{
+		Node* parent = nullptr; //标记待删除结点的父结点
+		Node* cur = _root; //标记待删除结点
+		while (cur)
+		{
+			if (key < cur->_key) //key值小于当前结点的值
+			{
+				//往该结点的左子树走
+				parent = cur;
+				cur = cur->_left;
+			}
+			else if (key > cur->_key) //key值大于当前结点的值
+			{
+				//往该结点的右子树走
+				parent = cur;
+				cur = cur->_right;
+			}
+			else //找到了待删除结点
+			{
+				if (cur->_left == nullptr) //待删除结点的左子树为空
+				{
+					if (cur == _root) //待删除结点是根结点，此时parent为nullptr
+					{
+						_root = cur->_right; //二叉搜索树的根结点改为根结点的右孩子即可
+					}
+					else //待删除结点不是根结点，此时parent不为nullptr
+					{
+						if (cur == parent->_left) //待删除结点是其父结点的左孩子
+						{
+							parent->_left = cur->_right; //父结点的左指针指向待删除结点的右子树即可
+						}
+						else //待删除结点是其父结点的右孩子
+						{
+							parent->_right = cur->_right; //父结点的右指针指向待删除结点的右子树即可
+						}
+					}
+					delete cur; //释放待删除结点
+					return true; //删除成功，返回true
+				}
+				else if (cur->_right == nullptr) //待删除结点的右子树为空
+				{
+					if (cur == _root) //待删除结点是根结点，此时parent为nullptr
+					{
+						_root = cur->_left; //二叉搜索树的根结点改为根结点的左孩子即可
+					}
+					else //待删除结点不是根结点，此时parent不为nullptr
+					{
+						if (cur == parent->_left) //待删除结点是其父结点的左孩子
+						{
+							parent->_left = cur->_left; //父结点的左指针指向待删除结点的左子树即可
+						}
+						else //待删除结点是其父结点的右孩子
+						{
+							parent->_right = cur->_left; //父结点的右指针指向待删除结点的左子树即可
+						}
+					}
+					delete cur; //释放待删除结点
+					return true; //删除成功，返回true
+				}
+				else //待删除结点的左右子树均不为空
+				{
+					//替换法删除
+					Node* minParent = cur; //标记待删除结点右子树当中值最小结点的父结点
+					Node* minRight = cur->_right; //标记待删除结点右子树当中值最小的结点
+					//寻找待删除结点右子树当中值最小的结点
+					while (minRight->_left)
+					{
+						//一直往左子树走
+						minParent = minRight;
+						minRight = minRight->_left;
+					}
+					cur->_key = minRight->_key; //将待删除结点的值改为minRight的值
+					//注意一个隐含条件：此时minRight的_left为空
+					if (minRight == minParent->_left) //minRight是其父结点的左孩子
+					{
+						minParent->_left = minRight->_right; //父结点的左指针指向minRight的右子树即可
+					}
+					else //minRight是其父结点的右孩子
+					{
+						minParent->_right = minRight->_right; //父结点的右指针指向minRight的右子树即可
+					}
+					delete minRight; //释放minRight
+					return true; //删除成功，返回true
+				}
+			}
+		}
+		return false; //没有找到待删除结点，删除失败，返回false
+	}
+
+	////递归删除函数1的子函数(待查)
+	//bool _EraseR(Node*& root, const K& key)
+	//{
+	//	if (root == nullptr)
+	//		return false;
+
+	//	if (key < root->_key)
+	//		return _EraseR(root->_left, key);
+	//	else if (key > root->_key)
+	//		return _EraseR(root->_right, key);
+	//	else
+	//	{
+	//		//找到了
+	//		if (root->_left == nullptr)
+	//		{
+	//			Node* del = root;
+	//			root = root->_right;
+	//			delete del;
+	//		}
+	//		else if (root->_right == nullptr)
+	//		{
+	//			Node* del = root;
+	//			root = root->_left;
+	//			delete del;
+	//		}
+	//		else
+	//		{
+	//			Node* minParent = root;
+	//			Node* minRight = root->_right;
+	//			while (minRight->_left)
+	//			{
+	//				minParent = minRight;
+	//				minRight = minRight->_left;
+	//			}
+	//			root->_key = minRight->_key;
+	//			if (minRight == minParent->_left)
+	//				minParent->_left = minRight->_right;
+	//			else
+	//				minParent->_right = minRight->_right;
+	//			delete minRight;
+	//		}
+	//		return true;
+	//	}
+	//}
+	////递归删除函数1
+	//bool EraseR(const K& key)
+	//{
+	//	return _EraseR(_root, key);
+	//}
+
+	//删除函数2
 	//bool Erase(const K& key)
 	//{
 	//	Node* parent = nullptr;
@@ -207,156 +348,19 @@ public:
 	//			}
 	//			else
 	//			{
-	//				Node* minParent = cur;
 	//				Node* minRight = cur->_right;
 	//				while (minRight->_left)
 	//				{
-	//					minParent = minRight;
 	//					minRight = minRight->_left;
 	//				}
-	//				cur->_key = minRight->_key;
-	//				if (minParent->_left == minRight)
-	//				{
-	//					minParent->_left = minRight->_right;
-	//				}
-	//				else
-	//				{
-	//					minParent->_right = minRight->_right;
-	//				}
-
-	//				delete minRight;
-	//				return true;
+	//				K minKey = minRight->_key;
+	//				Erase(minKey); //this->Erase(minKey);
+	//				cur->_key = minKey;
 	//			}
 	//		}
 	//	}
 	//	return false;
 	//}
-
-	////递归删除函数1的子函数(待查)
-	//bool _EraseR(Node*& root, const K& key)
-	//{
-	//	if (root == nullptr)
-	//		return false;
-
-	//	if (key < root->_key)
-	//		return _EraseR(root->_left, key);
-	//	else if (key > root->_key)
-	//		return _EraseR(root->_right, key);
-	//	else
-	//	{
-	//		//找到了
-	//		if (root->_left == nullptr)
-	//		{
-	//			Node* del = root;
-	//			root = root->_right;
-	//			delete del;
-	//		}
-	//		else if (root->_right == nullptr)
-	//		{
-	//			Node* del = root;
-	//			root = root->_left;
-	//			delete del;
-	//		}
-	//		else
-	//		{
-	//			Node* minParent = root;
-	//			Node* minRight = root->_right;
-	//			while (minRight->_left)
-	//			{
-	//				minParent = minRight;
-	//				minRight = minRight->_left;
-	//			}
-	//			root->_key = minRight->_key;
-	//			if (minRight == minParent->_left)
-	//				minParent->_left = minRight->_right;
-	//			else
-	//				minParent->_right = minRight->_right;
-	//			delete minRight;
-	//		}
-	//		return true;
-	//	}
-	//}
-	////递归删除函数1
-	//bool EraseR(const K& key)
-	//{
-	//	return _EraseR(_root, key);
-	//}
-
-	//删除函数2
-	bool Erase(const K& key)
-	{
-		Node* parent = nullptr;
-		Node* cur = _root;
-		while (cur)
-		{
-			if (key < cur->_key)
-			{
-				parent = cur;
-				cur = cur->_left;
-			}
-			else if (key > cur->_key)
-			{
-				parent = cur;
-				cur = cur->_right;
-			}
-			else
-			{
-				//找到了
-				if (cur->_left == nullptr)
-				{
-					if (cur == _root)
-					{
-						_root = cur->_right;
-					}
-					else
-					{
-						if (parent->_left == cur)
-						{
-							parent->_left = cur->_right;
-						}
-						else
-						{
-							parent->_right = cur->_right;
-						}
-					}
-					delete cur;
-					return true;
-				}
-				else if (cur->_right == nullptr)
-				{
-					if (cur == _root)
-					{
-						_root = cur->_left;
-					}
-					else
-					{
-						if (parent->_left = cur)
-						{
-							parent->_left = cur->_left;
-						}
-						else
-						{
-							parent->_right = cur->_left;
-						}
-					}
-					delete cur;
-					return true;
-				}
-				else
-				{
-					Node* minRight = cur->_right;
-					while (minRight->_left)
-					{
-						minRight = minRight->_left;
-					}
-					K minKey = minRight->_key;
-					Erase(minKey); //this->Erase(minKey);
-					cur->_key = minKey;
-				}
-			}
-		}
-		return false;
-	}
 
 	//递归删除函数2的子函数
 	bool _EraseR(Node*& root, const K& key)
