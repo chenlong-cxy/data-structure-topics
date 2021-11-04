@@ -145,7 +145,7 @@ public:
 	{
 		return _InsertR(_root, key); //调用子函数进行插入
 	}
-	//删除函数1
+	//删除函数（方法一）
 	bool Erase(const K& key)
 	{
 		Node* parent = nullptr; //标记待删除结点的父结点
@@ -214,7 +214,7 @@ public:
 					//寻找待删除结点右子树当中值最小的结点
 					while (minRight->_left)
 					{
-						//一直往左子树走
+						//一直往左走
 						minParent = minRight;
 						minRight = minRight->_left;
 					}
@@ -236,175 +236,186 @@ public:
 		return false; //没有找到待删除结点，删除失败，返回false
 	}
 
-	////递归删除函数1的子函数(待查)
+	////递归删除函数的子函数（方法一）
 	//bool _EraseR(Node*& root, const K& key)
 	//{
-	//	if (root == nullptr)
-	//		return false;
+	//	if (root == nullptr) //空树
+	//		return false; //删除失败，返回false
 
-	//	if (key < root->_key)
-	//		return _EraseR(root->_left, key);
-	//	else if (key > root->_key)
-	//		return _EraseR(root->_right, key);
-	//	else
+	//	if (key < root->_key) //key值小于根结点的值
+	//		return _EraseR(root->_left, key); //待删除结点在根的左子树当中
+	//	else if (key > root->_key) //key值大于根结点的值
+	//		return _EraseR(root->_right, key); //待删除结点在根的右子树当中
+	//	else //找到了待删除结点
 	//	{
-	//		//找到了
-	//		if (root->_left == nullptr)
+	//		if (root->_left == nullptr) //待删除结点的左子树为空
 	//		{
-	//			Node* del = root;
-	//			root = root->_right;
-	//			delete del;
+	//			Node* del = root; //保存根结点
+	//			root = root->_right; //根的右子树作为二叉树新的根结点
+	//			delete del; //释放根结点
 	//		}
-	//		else if (root->_right == nullptr)
+	//		else if (root->_right == nullptr) //待删除结点的右子树为空
 	//		{
-	//			Node* del = root;
-	//			root = root->_left;
-	//			delete del;
+	//			Node* del = root; //保存根结点
+	//			root = root->_left; //根的左子树作为二叉树新的根结点
+	//			delete del; //释放根结点
 	//		}
-	//		else
+	//		else //待删除结点的左右子树均不为空
 	//		{
-	//			Node* minParent = root;
-	//			Node* minRight = root->_right;
+	//			Node* minParent = root; //标记根结点右子树当中值最小结点的父结点
+	//			Node* minRight = root->_right; //标记根结点右子树当中值最小的结点
+	//			//寻找根结点右子树当中值最小的结点
 	//			while (minRight->_left)
 	//			{
+	//				//一直往左走
 	//				minParent = minRight;
 	//				minRight = minRight->_left;
 	//			}
-	//			root->_key = minRight->_key;
-	//			if (minRight == minParent->_left)
-	//				minParent->_left = minRight->_right;
-	//			else
-	//				minParent->_right = minRight->_right;
-	//			delete minRight;
+	//			root->_key = minRight->_key; //将根结点的值改为minRight的值
+	//			//注意一个隐含条件：此时minRight的_left为空
+	//			if (minRight == minParent->_left) //minRight是其父结点的左孩子
+	//			{
+	//				minParent->_left = minRight->_right; //父结点的左指针指向minRight的右子树即可
+	//			}
+	//			else //minRight是其父结点的右孩子
+	//			{
+	//				minParent->_right = minRight->_right; //父结点的右指针指向minRight的右子树即可
+	//			}
+	//			delete minRight; //释放minRight
 	//		}
-	//		return true;
+	//		return true; //删除成功，返回true
 	//	}
 	//}
-	////递归删除函数1
+	////递归删除函数（方法一）
 	//bool EraseR(const K& key)
 	//{
-	//	return _EraseR(_root, key);
+	//	return _EraseR(_root, key); //删除_root当中值为key的结点
 	//}
 
-	//删除函数2
+	////删除函数（方法二）
 	//bool Erase(const K& key)
 	//{
-	//	Node* parent = nullptr;
-	//	Node* cur = _root;
+	//	Node* parent = nullptr; //标记待删除结点的父结点
+	//	Node* cur = _root; //标记待删除结点
 	//	while (cur)
 	//	{
-	//		if (key < cur->_key)
+	//		if (key < cur->_key) //key值小于当前结点的值
 	//		{
+	//			//往该结点的左子树走
 	//			parent = cur;
 	//			cur = cur->_left;
 	//		}
-	//		else if (key > cur->_key)
+	//		else if (key > cur->_key) //key值大于当前结点的值
 	//		{
+	//			//往该结点的右子树走
 	//			parent = cur;
 	//			cur = cur->_right;
 	//		}
-	//		else
+	//		else //找到了待删除结点
 	//		{
-	//			//找到了
-	//			if (cur->_left == nullptr)
+	//			if (cur->_left == nullptr) //待删除结点的左子树为空
 	//			{
-	//				if (cur == _root)
+	//				if (cur == _root) //待删除结点是根结点，此时parent为nullptr
 	//				{
-	//					_root = cur->_right;
+	//					_root = cur->_right; //二叉搜索树的根结点改为根结点的右孩子即可
 	//				}
-	//				else
+	//				else //待删除结点不是根结点，此时parent不为nullptr
 	//				{
-	//					if (parent->_left == cur)
+	//					if (cur == parent->_left) //待删除结点是其父结点的左孩子
 	//					{
-	//						parent->_left = cur->_right;
+	//						parent->_left = cur->_right; //父结点的左指针指向待删除结点的右子树即可
 	//					}
-	//					else
+	//					else //待删除结点是其父结点的右孩子
 	//					{
-	//						parent->_right = cur->_right;
+	//						parent->_right = cur->_right; //父结点的右指针指向待删除结点的右子树即可
 	//					}
 	//				}
-	//				delete cur;
-	//				return true;
+	//				delete cur; //释放待删除结点
+	//				return true; //删除成功，返回true
 	//			}
-	//			else if (cur->_right == nullptr)
+	//			else if (cur->_right == nullptr) //待删除结点的右子树为空
 	//			{
-	//				if (cur == _root)
+	//				if (cur == _root) //待删除结点是根结点，此时parent为nullptr
 	//				{
-	//					_root = cur->_left;
+	//					_root = cur->_left; //二叉搜索树的根结点改为根结点的左孩子即可
 	//				}
-	//				else
+	//				else //待删除结点不是根结点，此时parent不为nullptr
 	//				{
-	//					if (parent->_left = cur)
+	//					if (cur == parent->_left) //待删除结点是其父结点的左孩子
 	//					{
-	//						parent->_left = cur->_left;
+	//						parent->_left = cur->_left; //父结点的左指针指向待删除结点的左子树即可
 	//					}
-	//					else
+	//					else //待删除结点是其父结点的右孩子
 	//					{
-	//						parent->_right = cur->_left;
+	//						parent->_right = cur->_left; //父结点的右指针指向待删除结点的左子树即可
 	//					}
 	//				}
-	//				delete cur;
-	//				return true;
+	//				delete cur; //释放待删除结点
+	//				return true; //删除成功，返回true
 	//			}
-	//			else
+	//			else //待删除结点的左右子树均不为空
 	//			{
-	//				Node* minRight = cur->_right;
+	//				//替换法删除
+	//				Node* minRight = cur->_right; //标记待删除结点右子树当中值最小的结点
+	//				//寻找待删除结点右子树当中值最小的结点
 	//				while (minRight->_left)
 	//				{
+	//                  //一直往左走
 	//					minRight = minRight->_left;
 	//				}
-	//				K minKey = minRight->_key;
-	//				Erase(minKey); //this->Erase(minKey);
-	//				cur->_key = minKey;
+	//				K minKey = minRight->_key; //记录minRight结点的值
+	//				Erase(minKey); //minRight代替待删除结点被删除
+	//				cur->_key = minKey; //将待删除结点的值改为代替其被删除的结点的值，即minRight
 	//			}
 	//		}
 	//	}
-	//	return false;
+	//	return false; //没有找到待删除结点，删除失败，返回false
 	//}
 
-	//递归删除函数2的子函数
+	//递归删除函数的子函数（方法二）
 	bool _EraseR(Node*& root, const K& key)
 	{
-		if (root == nullptr)
-			return false;
+		if (root == nullptr) //空树
+			return false; //删除失败，返回false
 
-		if (key < root->_key)
-			return _EraseR(root->_left, key);
-		else if (key > root->_key)
-			return _EraseR(root->_right, key);
-		else
+		if (key < root->_key) //key值小于根结点的值
+			return _EraseR(root->_left, key); //待删除结点在根的左子树当中
+		else if (key > root->_key) //key值大于根结点的值
+			return _EraseR(root->_right, key); //待删除结点在根的右子树当中
+		else //找到了待删除结点
 		{
-			//找到了
-			if (root->_left == nullptr)
+			if (root->_left == nullptr) //待删除结点的左子树为空
 			{
-				Node* del = root;
-				root = root->_right;
-				delete del;
+				Node* del = root; //保存根结点
+				root = root->_right; //根的右子树作为二叉树新的根结点
+				delete del; //释放根结点
 			}
-			else if (root->_right == nullptr)
+			else if (root->_right == nullptr) //待删除结点的右子树为空
 			{
-				Node* del = root;
-				root = root->_left;
-				delete del;
+				Node* del = root; //保存根结点
+				root = root->_left; //根的左子树作为二叉树新的根结点
+				delete del; //释放根结点
 			}
-			else
+			else //待删除结点的左右子树均不为空
 			{
-				Node* minRight = root->_right;
+				Node* minRight = root->_right; //标记根结点右子树当中值最小的结点
+				//寻找根结点右子树当中值最小的结点
 				while (minRight->_left)
 				{
+					//一直往左走
 					minRight = minRight->_left;
 				}
-				K minKey = minRight->_key;
-				_EraseR(root->_right, minKey);
-				root->_key = minKey;
+				K minKey = minRight->_key; //记录minRight结点的值
+				_EraseR(root->_right, minKey); //删除右子树当中值为minkey的结点，即删除minRight
+				root->_key = minKey; //将根结点的值改为minRight的值
 			}
-			return true;
+			return true; //删除成功，返回true
 		}
 	}
-	//递归删除函数2
+	//递归删除函数（方法二）
 	bool EraseR(const K& key)
 	{
-		return _EraseR(_root, key);
+		return _EraseR(_root, key); //删除_root当中值为key的结点
 	}
 
 	//查找函数
@@ -413,39 +424,44 @@ public:
 		Node* cur = _root;
 		while (cur)
 		{
-			if (key < cur->_key)
+			if (key < cur->_key) //key值小于该结点的值
 			{
-				cur = cur->_left;
+				cur = cur->_left; //在该结点的左子树当中查找
 			}
-			else if (key > cur->_key)
+			else if (key > cur->_key) //key值大于该结点的值
 			{
-				cur = cur->_right;
+				cur = cur->_right; //在该结点的右子树当中查找
 			}
-			else
+			else //找到了值为key的结点
 			{
-				//找到了
-				return cur;
+				return cur; //查找成功，返回结点地址
 			}
 		}
-		return nullptr;
+		return nullptr; //树为空或查找失败，返回nullptr
 	}
 	//递归查找函数的子函数
 	Node* _FindR(Node* root, const K& key)
 	{
-		if (root == nullptr)
-			return nullptr;
+		if (root == nullptr) //树为空
+			return nullptr; //查找失败，返回nullptr
 
-		if (key < root->_key)
-			return _FindR(root->_left, key);
-		else if (key > root->_key)
-			return _FindR(root->_right, key);
-		else
-			return root;
+		if (key < root->_key) //key值小于根结点的值
+		{
+			return _FindR(root->_left, key); //在根结点的左子树当中查找
+		}
+		else if (key > root->_key) //key值大于根结点的值
+		{
+			return _FindR(root->_right, key); //在根结点的右子树当中查找
+		}
+		else //key值等于根结点的值
+		{
+			return root; //查找成功，返回根结点地址
+		}
 	}
 	//递归查找函数
 	Node* FindR(const K& key)
 	{
-		return _FindR(_root, key);
+		return _FindR(_root, key); //在_root当中查找值为key的结点
 	}
 	//中序遍历的子函数
 	void _InOrder(Node* root)
