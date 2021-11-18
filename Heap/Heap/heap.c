@@ -8,6 +8,7 @@ void Swap(HPDataType* x, HPDataType* y)
 	*y = tmp;
 }
 
+
 //堆的向下调整（小堆）
 void AdjustDown(HPDataType* a, int n, int parent)
 {
