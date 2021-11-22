@@ -27,10 +27,10 @@ public:
 				ret.push_back(cur->val);
 				cur = cur->left;
 			}
-			//2、取出栈顶结点
+			//2、取出栈顶结点top
 			TreeNode* top = st.top();
 			st.pop();
-			//3、准备访问其右子树
+			//3、准备访问top结点的右子树
 			cur = top->right;
 		}
 		return ret; //返回前序遍历结果
@@ -49,11 +49,11 @@ public:
 				st.push(cur);
 				cur = cur->left;
 			}
-			//2、取出栈顶结点并访问
+			//2、取出栈顶结点top并访问
 			TreeNode* top = st.top();
 			st.pop();
 			ret.push_back(top->val);
-			//3、准备访问其右子树
+			//3、准备访问top结点的右子树
 			cur = top->right;
 		}
 		return ret; //返回中序遍历结果
@@ -73,18 +73,18 @@ public:
 				st.push(cur);
 				cur = cur->left;
 			}
-			//2、取出栈顶结点
+			//2、观察栈顶结点top
 			TreeNode* top = st.top();
-			//3、若取出结点的右子树为空，或右子树已经访问过了，则访问该结点
+			//3、若top结点的右子树为空，或右子树已经访问过了，则访问该结点
 			if (top->right == nullptr || top->right == prev)
 			{
-				//将该结点从栈中弹出并访问
+				//访问top结点后将其从栈中弹出
 				st.pop();
 				ret.push_back(top->val);
-				//更新上一次访问的结点
+				//更新上一次访问的结点为top
 				prev = top;
 			}
-			else //4、若取出结点的右子树需要被访问，则准备访问其右子树
+			else //4、若top结点的右子树还未被访问，则准备访问其右子树
 			{
 				cur = top->right;
 			}
