@@ -79,7 +79,7 @@ public:
 		//控制平衡
 		//1、更新平衡因子
 		//2、如果出现不平衡，则需要旋转
-		while (cur != _root)
+		while (cur != _root) //最坏更新到根结点
 		{
 			if (cur == parent->_left)
 			{
@@ -90,9 +90,9 @@ public:
 				parent->_bf++;
 			}
 			//判断是否更新结束或需要进行旋转
-			if (parent->_bf == 0) //更新结束
+			if (parent->_bf == 0) //更新结束（新增结点把parent矮的那一边填上了，左右高度一致了）
 			{
-				break;
+				break; //parent树的高度没变，不会影响其父结点及以上结点的平衡因子
 			}
 			else if (parent->_bf == -1 || parent->_bf == 1) //需要继续往上更新平衡因子
 			{
@@ -101,7 +101,7 @@ public:
 				parent = parent->_parent;
 			}
 			else if (parent->_bf == -2 || parent->_bf == 2) //需要进行旋转
-			{
+			{ //parent已经不平衡了
 				if (parent->_bf == -2)
 				{
 					//cur的平衡因子不可能是0
@@ -127,7 +127,7 @@ public:
 						RotateL(parent); //左单旋
 					}
 				}
-				break; //旋转后一定平衡了，无需继续往上更新平衡因子
+				break; //旋转后一定平衡了，无需继续往上更新平衡因子(旋转后高度变为插入之前了)
 			}
 			else
 			{
