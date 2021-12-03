@@ -41,6 +41,7 @@ public:
 	~AVLTree()
 	{
 		_Destroy(_root);
+		_root = nullptr; //жУПе
 	}
 	//operator[]жиди
 	V& operator[](const K& key)
