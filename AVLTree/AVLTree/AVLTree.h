@@ -309,11 +309,20 @@ public:
 						RotateR(delParentPos); //右单旋
 						delParentPos = tmp; //更新根结点
 					}
-					else //delParentPos->_left->_bf == 1
+					else if(delParentPos->_left->_bf == 1)
 					{
 						Node* tmp = delParentPos->_left->_right; //记录delParentPos左右旋转后新的根结点
 						RotateLR(delParentPos); //左右双旋
 						delParentPos = tmp; //更新根结点
+					}
+					else //delParentPos->_left->_bf == 0
+					{
+						Node* tmp = delParentPos->_left; //记录delParentPos右旋转后新的根结点
+						RotateR(delParentPos); //右单旋
+						delParentPos = tmp; //更新根结点
+						//平衡因子调整
+						delParentPos->_bf = 1;
+						delParentPos->_right->_bf = -1;
 					}
 				}
 				else //delParentPos->_bf == 2
@@ -324,11 +333,20 @@ public:
 						RotateRL(delParentPos); //右左双旋
 						delParentPos = tmp; //更新根结点
 					}
-					else //delParentPos->_right->_bf == 1
+					else if(delParentPos->_right->_bf == 1)
 					{
 						Node* tmp = delParentPos->_right; //记录delParentPos左旋转后新的根结点
 						RotateL(delParentPos); //左单旋
 						delParentPos = tmp; //更新根结点
+					}
+					else //delParentPos->_right->_bf == 0
+					{
+						Node* tmp = delParentPos->_right; //记录delParentPos左旋转后新的根结点
+						RotateL(delParentPos); //左单旋
+						delParentPos = tmp; //更新根结点
+						//平衡因子调整
+						delParentPos->_bf = -1;
+						delParentPos->_left->_bf = 1;
 					}
 				}
 				//delParentPos树的高度变化，会影响其父结点的平衡因子，需要继续往上更新平衡因子

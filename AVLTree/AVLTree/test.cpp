@@ -40,8 +40,23 @@ void test2()
 	t.Inorder();
 	cout << t.IsAVLTree() << endl;
 }
+void test3()
+{
+	AVLTree<int, int> t;
+	//int arr[] = { 18, 15, 26, 14, 16 };
+	int arr[] = { 18, 15, 26, 24, 28 };
+	for (auto e : arr)
+	{
+		t.Insert(make_pair(e, e));
+	}
+	t.Inorder();
+	cout << t.IsAVLTree() << endl;
+	t.Erase(15);
+	t.Inorder();
+	cout << t.IsAVLTree() << endl;
+}
 int main()
 {
-	test2();
+	test3();
 	return 0;
 }
