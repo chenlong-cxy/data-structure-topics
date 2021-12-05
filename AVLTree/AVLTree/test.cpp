@@ -1,4 +1,7 @@
 #include "AVLTree.h"
+#include <stdlib.h>
+#include <time.h>
+#include <vector>
 
 void test1()
 {
@@ -55,8 +58,29 @@ void test3()
 	t.Inorder();
 	cout << t.IsAVLTree() << endl;
 }
+void test4()
+{
+	srand((unsigned int)time(NULL));
+	AVLTree<int, int> t;
+	//int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+	int n = 1000;
+	vector<int> v;
+	for (int i = 0; i < n;i++)
+	{
+		int e = rand();
+		v.push_back(e);
+		t.Insert(make_pair(e, e));
+	}
+	for (int i = 0; i < n;i++)
+	{
+		int e = v[i];
+		t.Erase(e);
+		cout << t.IsAVLTree() << endl;
+	}
+
+}
 int main()
 {
-	test3();
+	test4();
 	return 0;
 }

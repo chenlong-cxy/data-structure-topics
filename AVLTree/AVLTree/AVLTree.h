@@ -323,6 +323,7 @@ public:
 						//平衡因子调整
 						delParentPos->_bf = 1;
 						delParentPos->_right->_bf = -1;
+						break; //更正
 					}
 				}
 				else //delParentPos->_bf == 2
@@ -347,6 +348,7 @@ public:
 						//平衡因子调整
 						delParentPos->_bf = -1;
 						delParentPos->_left->_bf = 1;
+						break; //更正
 					}
 				}
 				//delParentPos树的高度变化，会影响其父结点的平衡因子，需要继续往上更新平衡因子
