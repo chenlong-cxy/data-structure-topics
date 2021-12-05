@@ -74,20 +74,20 @@ public:
 		Node* cur = _root;
 		while (cur)
 		{
-			if (key < cur->_kv.first)
+			if (key < cur->_kv.first) //key值小于该结点的值
 			{
-				cur = cur->_left;
+				cur = cur->_left; //在该结点的左子树当中查找
 			}
-			else if (key > cur->_kv.first)
+			else if (key > cur->_kv.first) //key值大于该结点的值
 			{
-				cur = cur->_right;
+				cur = cur->_right; //在该结点的右子树当中查找
 			}
-			else
+			else //找到了目标结点
 			{
-				return cur;
+				return cur; //返回该结点
 			}
 		}
-		return nullptr;
+		return nullptr; //查找失败
 	}
 
 	//插入函数
@@ -244,13 +244,17 @@ public:
 	//判断是否为红黑树
 	bool ISRBTree()
 	{
+		if (_root == nullptr) //空树是红黑树
+		{
+			return true;
+		}
 		if (_root->_col == RED)
 		{
 			cout << "error：根结点为红色" << endl;
 			return false;
 		}
 		
-		//任意计算一条从根到叶子的路径当中黑色结点的数目
+		//找最左路径作为黑色结点数目的参考值
 		Node* cur = _root;
 		int BlackCount = 0;
 		while (cur)
@@ -263,30 +267,48 @@ public:
 		int count = 0;
 		return _ISRBTree(_root, count, BlackCount);
 	}
+
+	//中序遍历
+	void Inorder()
+	{
+		_Inorder(_root);
+	}
 private:
+	//中序遍历子函数
+	void _Inorder(Node* root)
+	{
+		if (root == nullptr)
+			return;
+		_Inorder(root->_left);
+		cout << root->_kv.first << " ";
+		_Inorder(root->_right);
+	}
+
 	//判断是否为红黑树的子函数
 	bool _ISRBTree(Node* root, int count, int BlackCount)
 	{
-		//该路径已经走完了
-		if (root == nullptr)
+		if (root == nullptr) //该路径已经走完了
 		{
 			if (count != BlackCount)
 			{
-				cout << "error：从根到叶子的路径所包含黑色结点的数目不相同" << endl;
+				cout << "error：黑色结点的数目不相等" << endl;
 				return false;
 			}
 			return true;
 		}
-		if (root->_col == BLACK)
-			count++;
-		Node* parent = root->_parent;
-		if (parent&&parent->_col == RED&&root->_col == RED)
+
+		if (root->_col == RED&&root->_parent->_col == RED)
 		{
 			cout << "error：存在连续的红色结点" << endl;
 			return false;
 		}
-		return _ISRBTree(root->_left, count, BlackCount);
+		if (root->_col == BLACK)
+		{
+			count++;
+		}
+		return _ISRBTree(root->_left, count, BlackCount) && _ISRBTree(root->_right, count, BlackCount);
 	}
+
 	//析构函数子函数
 	void _Destroy(Node* root)
 	{

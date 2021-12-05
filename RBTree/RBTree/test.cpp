@@ -8,6 +8,7 @@ void test1()
 	{
 		t.Insert(make_pair(e, e));
 	}
+	//t.Inorder();
 	cout << t.ISRBTree() << endl;
 }
 int main()
