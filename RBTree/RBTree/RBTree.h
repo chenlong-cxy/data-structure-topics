@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <assert.h>
 using namespace std;
 
 //枚举定义结点的颜色
@@ -218,27 +219,237 @@ public:
 	//删除函数
 	bool Erase(const K& key)
 	{
-		Node* cur = _root;
+		//用于遍历二叉树
 		Node* parent = nullptr;
+		Node* cur = _root;
+		//用于标记实际的待删除结点及其父结点
+		Node* delParentPos = nullptr;
+		Node* delPos = nullptr;
 		while (cur)
 		{
-			if (key < cur->_kv.first)
+			if (key < cur->_kv.first) //所给key值小于当前结点的key值
 			{
+				//往该结点的左子树走
 				parent = cur;
 				cur = cur->_left;
 			}
-			else if (key > cur->_kv.first)
+			else if (key > cur->_kv.first) //所给key值大于当前结点的key值
 			{
+				//往该结点的右子树走
 				parent = cur;
 				cur = cur->_right;
 			}
-			else
+			else //找到了待删除结点
 			{
-				//找到了待删除结点
-
+				if (cur->_left == nullptr) //待删除结点的左子树为空
+				{
+					if (cur == _root) //待删除结点是根结点
+					{
+						_root = _root->_right; //让根结点的右子树作为新的根结点
+						if (_root)
+						{
+							_root->_parent = nullptr;
+							_root->_col = BLACK; //根结点为黑色
+						}
+						delete cur; //删除原根结点
+						return true;
+					}
+					else
+					{
+						delParentPos = parent; //标记实际删除结点的父结点
+						delPos = cur; //标记实际删除的结点
+					}
+					break; //进行红黑树的调整以及结点的实际删除
+				}
+				else if (cur->_right == nullptr) //待删除结点的右子树为空
+				{
+					if (cur == _root) //待删除结点是根结点
+					{
+						_root = _root->_left; //让根结点的左子树作为新的根结点
+						if (_root)
+						{
+							_root->_parent = nullptr;
+							_root->_col = BLACK; //根结点为黑色
+						}
+						delete cur; //删除原根结点
+						return true;
+					}
+					else
+					{
+						delParentPos = parent; //标记实际删除结点的父结点
+						delPos = cur; //标记实际删除的结点
+					}
+					break; //进行红黑树的调整以及结点的实际删除
+				}
+				else //待删除结点的左右子树均不为空
+				{
+					//替换法删除
+					//寻找待删除结点右子树当中key值最小的结点作为实际删除结点
+					Node* minParent = cur;
+					Node* minRight = cur->_right;
+					while (minRight->_left)
+					{
+						minParent = minRight;
+						minRight = minRight->_left;
+					}
+					cur->_kv.first = minRight->_kv.first; //将待删除结点的key改为minRight的key
+					cur->_kv.second = minRight->_kv.second; //将待删除结点的value改为minRight的value
+					delParentPos = minParent; //标记实际删除结点的父结点
+					delPos = minRight; //标记实际删除的结点
+					break; //进行红黑树的调整以及结点的实际删除
+				}
 			}
 		}
-		return false; ////////////////
+		if (delPos == nullptr) //delPos没有被修改过，说明没有找到待删除结点
+		{
+			return false;
+		}
+
+		//记录待删除结点及其父结点（用于后续实际删除）
+		Node* del = delPos;
+		Node* delP = delParentPos;
+
+		//调整红黑树
+		if (delPos->_col == BLACK) //删除的是黑色结点
+		{
+			if (delPos->_left) //待删除结点有一个红色的左孩子（不可能是黑色）
+			{
+				delPos->_left->_col = BLACK; //将这个红色的左孩子变黑即可
+			}
+			else if (delPos->_right) //待删除结点有一个红色的右孩子（不可能是黑色）
+			{
+				delPos->_right->_col = BLACK; //将这个红色的右孩子变黑即可
+			}
+			else //待删除结点的左右均为空
+			{
+				while (delPos != _root) //可能一直调整到根结点
+				{
+					if (delPos == delParentPos->_left) //待删除结点是其父结点的左孩子
+					{
+						Node* brother = delParentPos->_right; //兄弟结点是其父结点的右孩子
+						//情况一：brother为红色
+						if (brother->_col == RED)
+						{
+							delParentPos->_col = RED;
+							brother->_col = BLACK;
+							RotateL(delParentPos);
+							//需要继续处理
+							brother = delParentPos->_right; //更新brother（否则在本循环中执行其他情况的代码会出错）
+						}
+						//情况二：brother为黑色，且其左右孩子都是黑色结点或为空
+						if (((brother->_left == nullptr) || (brother->_left->_col == BLACK))
+							&& ((brother->_right == nullptr) || (brother->_right->_col == BLACK)))
+						{
+							brother->_col = RED;
+							if (delParentPos->_col == RED)
+							{
+								delParentPos->_col = BLACK;
+								break;
+							}
+							//需要继续处理
+							delPos = delParentPos;
+							delParentPos = delPos->_parent;
+						}
+						else
+						{
+							//情况三：brother为黑色，且其左孩子是红色结点，右孩子是黑色结点或为空
+							if ((brother->_right == nullptr) || (brother->_right->_col == BLACK))
+							{
+								brother->_left->_col = BLACK;
+								brother->_col = RED;
+								RotateR(brother);
+								//需要继续处理
+								brother = delParentPos->_right; //更新brother（否则执行下面情况四的代码会出错）
+							}
+							//情况四：brother为黑色，且其右孩子是红色结点
+							brother->_col = delParentPos->_col;
+							delParentPos->_col = BLACK;
+							brother->_right->_col = BLACK;
+							RotateL(delParentPos);
+							break; //情况四执行完毕后调整一定结束
+						}
+					}
+					else //delPos == delParentPos->_right //待删除结点是其父结点的左孩子
+					{
+						Node* brother = delParentPos->_left; //兄弟结点是其父结点的左孩子
+						//情况一：brother为红色
+						if (brother->_col == RED) //brother为红色
+						{
+							delParentPos->_col = RED;
+							brother->_col = BLACK;
+							RotateR(delParentPos);
+							//需要继续处理
+							brother = delParentPos->_left; //更新brother（否则在本循环中执行其他情况的代码会出错）
+						}
+						//情况二：brother为黑色，且其左右孩子都是黑色结点或为空
+						if (((brother->_left == nullptr) || (brother->_left->_col == BLACK))
+							&& ((brother->_right == nullptr) || (brother->_right->_col == BLACK)))
+						{
+							brother->_col = RED;
+							if (delParentPos->_col == RED)
+							{
+								delParentPos->_col = BLACK;
+								break;
+							}
+							//需要继续处理
+							delPos = delParentPos;
+							delParentPos = delPos->_parent;
+						}
+						else
+						{
+							//情况三：brother为黑色，且其右孩子是红色结点，左孩子是黑色结点或为空
+							if ((brother->_left == nullptr) || (brother->_left->_col == BLACK))
+							{
+								brother->_right->_col = BLACK;
+								brother->_col = RED;
+								RotateL(brother);
+								//需要继续处理
+								brother = delParentPos->_left; //更新brother（否则执行下面情况四的代码会出错）
+							}
+							//情况四：brother为黑色，且其左孩子是红色结点
+							brother->_col = delParentPos->_col;
+							delParentPos->_col = BLACK;
+							brother->_left->_col = BLACK;
+							RotateR(delParentPos);
+							break; //情况四执行完毕后调整一定结束
+						}
+					}
+				}
+			}
+		}
+		//进行实际删除
+		if (del->_left == nullptr) //实际删除结点的左子树为空
+		{
+			if (del == delP->_left) //实际删除结点是其父结点的左孩子
+			{
+				delP->_left = del->_right;
+				if (del->_right)
+					del->_right->_parent = delP;
+			}
+			else //实际删除结点是其父结点的右孩子
+			{
+				delP->_right = del->_right;
+				if (del->_right)
+					del->_right->_parent = delP;
+			}
+		}
+		else //实际删除结点的右子树为空
+		{
+			if (del == delP->_left) //实际删除结点是其父结点的左孩子
+			{
+				delP->_left = del->_left;
+				if (del->_left)
+					del->_left->_parent = delP;
+			}
+			else //实际删除结点是其父结点的右孩子
+			{
+				delP->_right = del->_left;
+				if (del->_left)
+					del->_left->_parent = delP;
+			}
+		}
+		delete del; //实际删除结点
+		return true;
 	}
 	
 	//判断是否为红黑树
