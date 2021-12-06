@@ -65,7 +65,7 @@ public:
 		return true;
 	}
 	//插入函数
-	pair<Node*, bool>& Insert(const pair<K, V>& kv)
+	pair<Node*, bool> Insert(const pair<K, V>& kv)
 	{
 		if (_root == nullptr) //若AVL树为空树，则插入结点直接作为根结点
 		{

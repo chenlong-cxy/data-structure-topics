@@ -79,8 +79,26 @@ void test4()
 	}
 
 }
+void test5()
+{
+	AVLTree<int, int> t;
+	//int arr[] = { 18, 15, 26, 14, 16 };
+	int arr[] = { 18, 15, 26, 24, 28 };
+	for (auto e : arr)
+	{
+		t.Insert(make_pair(e, e));
+	}
+	t.Inorder();
+	cout << t.IsAVLTree() << endl;
+	
+	t[18] = 188;
+	t[0] = 9;
+
+	t.Inorder();
+	cout << t.IsAVLTree() << endl;
+}
 int main()
 {
-	test4();
+	test5();
 	return 0;
 }
