@@ -59,8 +59,19 @@ public:
 	RBTree()
 		:_root(nullptr)
 	{}
+
 	//拷贝构造
+	RBTree(const RBTree<K, V>& t)
+	{
+		_root = _Copy(t._root);
+	}
+
 	//operator=
+	RBTree<K, V>& operator=(RBTree<K, V> t)
+	{
+		swap(_root, t._root);
+		return *this;
+	}
 
 	//析构函数
 	~RBTree()
@@ -485,6 +496,19 @@ public:
 		_Inorder(_root);
 	}
 private:
+	//拷贝树
+	Node* _Copy(Node* root)
+	{
+		if (root == nullptr)
+		{
+			return nullptr;
+		}
+		Node* copyNode = new Node(root->_kv);
+		copyNode->_left = _Copy(root->_left);
+		copyNode->_right = _Copy(root->_right);
+		return copyNode;
+	}
+
 	//中序遍历子函数
 	void _Inorder(Node* root)
 	{
