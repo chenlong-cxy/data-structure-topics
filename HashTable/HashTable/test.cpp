@@ -3,7 +3,8 @@
 
 int main()
 {
-	CloseHash::TestHashTable3();
+	//CloseHash::TestHashTable2();
+	OpenHash::TestHashTable2();
 	//struct Stu
 	//{
 	//	int _id;
