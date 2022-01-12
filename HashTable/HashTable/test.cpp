@@ -4,7 +4,7 @@
 int main()
 {
 	//CloseHash::TestHashTable2();
-	OpenHash::TestHashTable2();
+	//OpenHash::TestHashTable2();
 	//struct Stu
 	//{
 	//	int _id;
