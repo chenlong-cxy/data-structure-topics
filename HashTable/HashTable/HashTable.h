@@ -83,12 +83,13 @@ namespace CloseHash
 			}
 
 			//3、将键值对插入哈希表
+			//a、通过哈希函数计算哈希地址（除数不能是capacity）
 			HashFunc hf;
-			size_t start = hf(kv.first)%_table.size(); //通过哈希函数计算哈希地址（除数不能是capacity）
+			size_t start = hf(kv.first)%_table.size();
 			size_t index = start;
 			size_t i = 1;
 			int base = index;
-			//a、找到一个状态为EMPTY或DELETE的位置
+			//b、找到一个状态为EMPTY或DELETE的位置
 			while (_table[index]._state == EXIST)
 			{
 				index = start + i; //线性探测
@@ -398,9 +399,11 @@ namespace OpenHash
 			//释放哈希表
 			_Destroy(_table);
 		}
+		//获取本次增容后哈希表的大小
 		size_t GetNextPrime(size_t prime)
 		{
 			const int PRIMECOUNT = 28;
+			//素数序列
 			const size_t primeList[PRIMECOUNT] =
 			{
 				53ul, 97ul, 193ul, 389ul, 769ul,
