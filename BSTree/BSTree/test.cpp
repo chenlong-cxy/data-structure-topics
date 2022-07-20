@@ -1,5 +1,4 @@
 #include "BSTree.h"
-
 int main()
 {
 	BSTree<int> t;
