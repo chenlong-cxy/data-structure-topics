@@ -65,88 +65,88 @@
 //}
 
 
-#include <iostream>
-#include <string>
-#include <vector>
-using namespace std;
-
-class Trie {
-	struct TrieNode {
-		vector<TrieNode*> childPtr;
-		bool isEnd;
-		TrieNode()
-			:childPtr(26, nullptr)
-			, isEnd(false)
-		{}
-	};
-public:
-	Trie() {
-		root = new TrieNode;
-	}
-	void insert(string word) {
-		TrieNode* cur = root;
-		for (auto ch : word) {
-			if (cur->childPtr[ch - 'a'] == nullptr) {
-				cur->childPtr[ch - 'a'] = new TrieNode;
-			}
-			cur = cur->childPtr[ch - 'a'];
-		}
-		cur->isEnd = true;
-	}
-	string findFirstPrefix(string word) {
-		TrieNode* cur = root;
-		size_t pos = 0;
-		while (pos < word.size()) {
-			if (cur->isEnd)
-				break;
-			if (cur->childPtr[word[pos] - 'a'] == nullptr)
-				return word;
-			cur = cur->childPtr[word[pos] - 'a'];
-			pos++;
-		}
-		return word.substr(0, pos);
-	}
-private:
-	TrieNode* root;
-};
-class Solution {
-public:
-	string replaceWords(vector<string>& dictionary, string sentence) {
-		Trie t;
-		for (auto& prefix : dictionary)
-			t.insert(prefix);
-		vector<string> words = splitSentence(sentence);
-		string ret;
-		for (int i = 0; i < words.size(); i++)
-		{
-			ret += t.findFirstPrefix(words[i]);
-			ret += " ";
-		}
-		ret.resize(ret.size() - 1);
-		return ret;
-	}
-	vector<string> splitSentence(string sentence) {
-		vector<string> ret;
-		size_t start = 0;
-		size_t pos = sentence.find(' ', start);
-		while (pos != string::npos) {
-			string sub = sentence.substr(start, pos - start);
-			ret.push_back(sub);
-			start = pos + 1;
-			pos = sentence.find(' ', start);
-		}
-		string sub = sentence.substr(start);
-		ret.push_back(sub);
-		return ret;
-	}
-};
-int main()
-{
-	vector<string> dict = { "cat", "bat", "rat" };
-	string sentence = "the cattle was rattled by the battery";
-	cout << Solution().replaceWords(dict, sentence) << endl;
-	return 0;
-}
+//#include <iostream>
+//#include <string>
+//#include <vector>
+//using namespace std;
+//
+//class Trie {
+//	struct TrieNode {
+//		vector<TrieNode*> childPtr;
+//		bool isEnd;
+//		TrieNode()
+//			:childPtr(26, nullptr)
+//			, isEnd(false)
+//		{}
+//	};
+//public:
+//	Trie() {
+//		root = new TrieNode;
+//	}
+//	void insert(string word) {
+//		TrieNode* cur = root;
+//		for (auto ch : word) {
+//			if (cur->childPtr[ch - 'a'] == nullptr) {
+//				cur->childPtr[ch - 'a'] = new TrieNode;
+//			}
+//			cur = cur->childPtr[ch - 'a'];
+//		}
+//		cur->isEnd = true;
+//	}
+//	string findFirstPrefix(string word) {
+//		TrieNode* cur = root;
+//		size_t pos = 0;
+//		while (pos < word.size()) {
+//			if (cur->isEnd)
+//				break;
+//			if (cur->childPtr[word[pos] - 'a'] == nullptr)
+//				return word;
+//			cur = cur->childPtr[word[pos] - 'a'];
+//			pos++;
+//		}
+//		return word.substr(0, pos);
+//	}
+//private:
+//	TrieNode* root;
+//};
+//class Solution {
+//public:
+//	string replaceWords(vector<string>& dictionary, string sentence) {
+//		Trie t;
+//		for (auto& prefix : dictionary)
+//			t.insert(prefix);
+//		vector<string> words = splitSentence(sentence);
+//		string ret;
+//		for (int i = 0; i < words.size(); i++)
+//		{
+//			ret += t.findFirstPrefix(words[i]);
+//			ret += " ";
+//		}
+//		ret.resize(ret.size() - 1);
+//		return ret;
+//	}
+//	vector<string> splitSentence(string sentence) {
+//		vector<string> ret;
+//		size_t start = 0;
+//		size_t pos = sentence.find(' ', start);
+//		while (pos != string::npos) {
+//			string sub = sentence.substr(start, pos - start);
+//			ret.push_back(sub);
+//			start = pos + 1;
+//			pos = sentence.find(' ', start);
+//		}
+//		string sub = sentence.substr(start);
+//		ret.push_back(sub);
+//		return ret;
+//	}
+//};
+//int main()
+//{
+//	vector<string> dict = { "cat", "bat", "rat" };
+//	string sentence = "the cattle was rattled by the battery";
+//	cout << Solution().replaceWords(dict, sentence) << endl;
+//	return 0;
+//}
 
 
 //class MagicDictionary {
@@ -206,4 +206,281 @@ int main()
 //	}
 //private:
 //	TrieNode* root;
+//};
+
+//#include <iostream>
+//#include <unordered_map>
+//#include <string>
+//#include <vector>
+//using namespace std;
+//
+////class Solution {
+////public:
+////	struct TrieNode
+////	{
+////		vector<TrieNode*> childPtr;
+////		bool isEnd;
+////		TrieNode()
+////			:childPtr(26, nullptr)
+////			, isEnd(false)
+////		{}
+////	};
+////	int minimumLengthEncoding(vector<string>& words) {
+////		int ret = 0;
+////		TrieNode* root = new TrieNode;
+////		for (auto& word : words)
+////		{
+////			TrieNode* cur = root;
+////			int len = 1;
+////			bool isNewPath = false;
+////			for (int i = word.size() - 1; i >= 0;i--)
+////			{
+////				char ch = word[i];
+////				if (cur->childPtr[ch - 'a'] == nullptr)
+////				{
+////					cur->childPtr[ch - 'a'] = new TrieNode;
+////					isNewPath = true;
+////				}
+////				cur = cur->childPtr[ch - 'a'];
+////				len++;
+////				if (cur->isEnd&&i != 0)
+////				{
+////					ret -= len;
+////					cur->isEnd = false;
+////				}
+////			}
+////			if (isNewPath)
+////			{
+////				ret += len;
+////				cur->isEnd = true;
+////			}
+////		}
+////		return ret;
+////	}
+////};
+//class TrieNode {
+//	vector<TrieNode*> childPtr;
+//public:
+//	int count;
+//	TrieNode()
+//		:childPtr(26, 0)
+//		, count(0)
+//	{}
+//	TrieNode* getNext(char ch)
+//	{
+//		if (childPtr[ch - 'a'] == nullptr)
+//		{
+//			childPtr[ch - 'a'] = new TrieNode;
+//			count++; //该结点的孩子增加
+//		}
+//		return childPtr[ch - 'a'];
+//	}
+//};
+//class Solution {
+//public:
+//	int minimumLengthEncoding(vector<string>& words) {
+//		unordered_map<TrieNode*, int> um; //对应结点是第几个单词
+//		TrieNode* root = new TrieNode;
+//		for (int i = 0; i < words.size(); i++)
+//		{
+//			TrieNode* cur = root;
+//			string word = words[i];
+//			for (int j = word.size() - 1; j >= 0; j--)
+//			{
+//				cur = cur->getNext(word[j]);
+//			}
+//			um[cur] = i;
+//		}
+//		int ret = 0;
+//		for (auto[node, index] : um) //C++17
+//		{
+//			if (node->count == 0) //叶子结点
+//				ret += words[index].size() + 1;
+//		}
+//		return ret;
+//	}
+//};
+//int main()
+//{
+//	vector<string> words = { "time", "atime", "btime" };
+//	cout << Solution().minimumLengthEncoding(words) << endl;
+//	return 0;
+//}
+
+//class MapSum {
+//public:
+//	struct TrieNode {
+//		vector<TrieNode*> childPtr;
+//		bool isEnd;
+//		TrieNode()
+//			:childPtr(26, nullptr)
+//			, isEnd(false)
+//		{}
+//	};
+//	/** Initialize your data structure here. */
+//	MapSum() {
+//		root = new TrieNode;
+//	}
+//
+//	void insert(string key, int val) {
+//		TrieNode* cur = root;
+//		for (auto ch : key)
+//		{
+//			if (cur->childPtr[ch - 'a'] == nullptr)
+//				cur->childPtr[ch - 'a'] = new TrieNode;
+//			cur = cur->childPtr[ch - 'a'];
+//		}
+//		cur->isEnd = true;
+//		um[cur] = val;
+//	}
+//
+//	int sum(string prefix) {
+//		TrieNode* cur = root;
+//		for (auto ch : prefix)
+//		{
+//			if (cur->childPtr[ch - 'a'] == nullptr)
+//				cur->childPtr[ch - 'a'] = new TrieNode;
+//			cur = cur->childPtr[ch - 'a'];
+//		}
+//		return dfs(cur);
+//	}
+//	int dfs(TrieNode* cur)
+//	{
+//		int ret = 0;
+//		if (cur->isEnd)
+//			ret += um[cur];
+//		for (int i = 0; i < 26; i++)
+//		{
+//			if (cur->childPtr[i])
+//				ret += dfs(cur->childPtr[i]);
+//		}
+//		return ret;
+//	}
+//private:
+//	TrieNode* root;
+//	unordered_map<TrieNode*, int> um;
+//};
+//class MapSum {
+//public:
+//	struct TrieNode {
+//		vector<TrieNode*> childPtr;
+//		int val;
+//		TrieNode()
+//			:childPtr(26, nullptr)
+//			, val(0)
+//		{}
+//	};
+//	/** Initialize your data structure here. */
+//	MapSum() {
+//		root = new TrieNode;
+//	}
+//
+//	void insert(string key, int val) {
+//		int addVal = val;
+//		if (um.count(key))
+//			addVal -= um[key]; //如果val比之前的值小，则相当于要减去差值
+//		um[key] = val; //重新设置
+//		TrieNode* cur = root;
+//		for (auto ch : key) {
+//			if (cur->childPtr[ch - 'a'] == nullptr)
+//				cur->childPtr[ch - 'a'] = new TrieNode;
+//			cur = cur->childPtr[ch - 'a'];
+//			cur->val += addVal;
+//		}
+//	}
+//
+//	int sum(string prefix) {
+//		TrieNode* cur = root;
+//		for (auto ch : prefix) {
+//			if (cur->childPtr[ch - 'a'] == nullptr)
+//				return 0; //不存在以prefix为前缀的key
+//			cur = cur->childPtr[ch - 'a'];
+//		}
+//		return cur->val;
+//	}
+//private:
+//	TrieNode* root;
+//	unordered_map<string, int> um;
+//};
+
+////最大的异或
+//class Solution {
+//public:
+//	int findMaximumXOR(vector<int>& nums) {
+//		int x = 0;
+//		for (int k = 30; k >= 0; k--) //31个比特位
+//		{
+//			unordered_set<int> us; //将每个数的前31-k个比特位存进来
+//			for (auto num : nums) {
+//				us.insert(num >> k);
+//			}
+//			int next_x = (x << 1) + 1; //假设x的第k位是1
+//			bool flag = false;
+//			for (auto num : nums) {
+//				if (us.count(next_x ^ (num >> k))) {
+//					flag = true;
+//					break;
+//				}
+//			}
+//			if (flag)
+//				x = next_x;
+//			else
+//				x = next_x - 1; //假设不成立，第k位设置为0
+//		}
+//		return x;
+//	}
+//};
+//class Solution {
+//public:
+//	struct TrieNode {
+//		TrieNode* left = nullptr; //0
+//		TrieNode* right = nullptr; //1
+//	};
+//	int findMaximumXOR(vector<int>& nums) {
+//		TrieNode* root = new TrieNode;
+//		for (auto num : nums) {
+//			TrieNode* cur = root;
+//			for (int k = 30; k >= 0; k--) {
+//				if ((num >> k) & 1) { //1往右走
+//					if (cur->right == nullptr)
+//						cur->right = new TrieNode;
+//					cur = cur->right;
+//				}
+//				else { //0往左走
+//					if (cur->left == nullptr)
+//						cur->left = new TrieNode;
+//					cur = cur->left;
+//				}
+//			}
+//		}
+//		int maxXor = 0;
+//		for (auto num : nums) {
+//			TrieNode* cur = root;
+//			int x = 0;
+//			for (int k = 30; k >= 0; k--) {
+//				bool flag = false;
+//				if ((num >> k) & 1) { //1尽量往左走
+//					if (cur->left) {
+//						flag = true;
+//						cur = cur->left;
+//					}
+//					else
+//						cur = cur->right;
+//				}
+//				else { //0尽量往右走
+//					if (cur->right) {
+//						flag = true;
+//						cur = cur->right;
+//					}
+//					else
+//						cur = cur->left;
+//				}
+//				x *= 2;
+//				if (flag)
+//					x += 1;
+//			}
+//			maxXor = max(maxXor, x);
+//		}
+//		return maxXor;
+//	}
 //};

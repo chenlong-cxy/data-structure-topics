@@ -1,14 +1,26 @@
-﻿生成启动时间为 2023/2/14 20:32:40。
-     1>项目“D:\code\TrieTree\TrieTree\TrieTree.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2023/2/15 18:30:10。
+     1>项目“D:\github\data-structure-topics\TrieTree\TrieTree\TrieTree.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt test.cpp
          test.cpp
-     1>d:\code\trietree\trietree\test.cpp(120): warning C4018: “<”: 有符号/无符号不匹配
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\code\TrieTree\Debug\TrieTree.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\code\TrieTree\Debug\TrieTree.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\code\TrieTree\Debug\TrieTree.lib" /MACHINE:X86 Debug\test.obj
-         TrieTree.vcxproj -> D:\code\TrieTree\Debug\TrieTree.exe
-     1>已完成生成项目“D:\code\TrieTree\TrieTree\TrieTree.vcxproj”(Build 个目标)的操作。
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(284): warning C4018: “<”: 有符号/无符号不匹配
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): warning C4091: “”: 没有声明变量时忽略“auto”的左侧
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): error C2059: 语法错误:“空声明”
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): error C2143: 语法错误 : 缺少“;”(在“[”的前面)
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): error C3481: “node”:  未找到 lambda 捕获变量
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): error C3481: “index”:  未找到 lambda 捕获变量
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): error C2059: 语法错误:“)”
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(295): error C2059: 语法错误:“:”
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(296): error C2143: 语法错误 : 缺少“;”(在“{”的前面)
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(297): error C2065: “node”: 未声明的标识符
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(297): error C2227: “->count”的左边必须指向类/结构/联合/泛型类型
+                 类型是“unknown-type”
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(298): error C3493: 无法隐式捕获“ret”，因为尚未指定默认捕获模式
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(298): error C3493: 无法隐式捕获“words”，因为尚未指定默认捕获模式
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(298): error C2065: “index”: 未声明的标识符
+     1>d:\github\data-structure-topics\trietree\trietree\test.cpp(298): error C2228: “.size”的左边必须有类/结构/联合
+     1>已完成生成项目“D:\github\data-structure-topics\TrieTree\TrieTree\TrieTree.vcxproj”(Build 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:00.92
+已用时间 00:00:00.73
