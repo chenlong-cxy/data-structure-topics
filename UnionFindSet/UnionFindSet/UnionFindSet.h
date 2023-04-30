@@ -47,10 +47,11 @@ public:
 		while (_ufs[root] >= 0) { //当前结点值不是负数则继续向上找
 			root = _ufs[root];
 		}
+		//路径压缩
 		while (_ufs[x] >= 0) {
-			int tmp = _ufs[x];
+			int parent = _ufs[x];
 			_ufs[x] = root;
-			x = tmp;
+			x = parent;
 		}
 		return root; //返回根结点
 	}
