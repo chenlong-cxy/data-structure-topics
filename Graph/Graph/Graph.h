@@ -32,73 +32,97 @@ namespace Matrix {
 		void addEdge(const V& src, const V& dst, const W& weight) {
 			int srci = getVertexIndex(src), dsti = getVertexIndex(dst);
 			_matrix[srci][dsti] = weight;
-			if (Direction == false) //无向图
+			if (Direction == false) { //无向图
 				_matrix[dsti][srci] = weight;
+			}
 		}
 		void bfs(const V& src) {
 			int srci = getVertexIndex(src);
-			queue<int> q;
-			vector<bool> visited(_vertexs.size(), false);
-			q.push(srci);
-			visited[srci] = true;
-			
+			queue<int> q; //队列
+			vector<bool> visited(_vertexs.size(), false); //标记数组
+			q.push(srci); //起始顶点入队列
+			visited[srci] = true; //起始顶点标记为访问过
+
 			while (!q.empty()) {
-				int front = q.front();
-				q.pop();
-				cout << _vertexs[front] << " ";
-				for (int i = 0; i < _vertexs.size(); i++) {
-					if (_matrix[front][i] != MAX_W && visited[i] == false) {
-						q.push(i);
-						visited[i] = true;
+				int levelSize = q.size(); //一层一层的出
+				for (int i = 0; i < levelSize; i++) {
+					int front = q.front();
+					q.pop();
+					cout << _vertexs[front] << " ";
+					for (int j = 0; j < _vertexs.size(); j++) { //将front顶点的邻接顶点带入队列
+						if (_matrix[front][j] != MAX_W && visited[j] == false) { //是邻接顶点，并且没有被访问过
+							q.push(j); //入队列
+							visited[j] = true; //标记为访问过
+						}
 					}
 				}
+				cout << endl;
 			}
-			cout << endl;
+			
+			//while (!q.empty()) {
+			//	int front = q.front();
+			//	q.pop();
+			//	cout << _vertexs[front] << " ";
+			//	for (int i = 0; i < _vertexs.size(); i++) { //找出从front连接出去的顶点
+			//		if (_matrix[front][i] != MAX_W && visited[i] == false) { //是邻接顶点，并且没有被访问过
+			//			q.push(i); //入队列
+			//			visited[i] = true; //标记为访问过
+			//		}
+			//	}
+			//}
+			//cout << endl;
 		}
 		void _dfs(int srci, vector<bool>& visited) {
-			cout << _vertexs[srci] << " ";
-			visited[srci] = true;
-			for (int i = 0; i < _vertexs.size(); i++) {
-				if (_matrix[srci][i] != MAX_W && visited[i] == false)
+			cout << _vertexs[srci] << " "; //访问
+			visited[srci] = true; //标记为访问过
+			for (int i = 0; i < _vertexs.size(); i++) { //找从srci连接出去的顶点
+				if (_matrix[srci][i] != MAX_W && visited[i] == false) { //是邻接顶点，并且没有被访问过
 					_dfs(i, visited);
+				}
 			}
 		}
 		void dfs(const V& src) {
 			int srci = getVertexIndex(src);
-			vector<bool> visited(_vertexs.size(), false);
+			vector<bool> visited(_vertexs.size(), false); //标记数组
 			_dfs(srci, visited);
 			cout << endl;
 		}
 		void print() {
 			int n = _vertexs.size();
-			cout << "顶点: ";
+			//打印顶点
 			for (int i = 0; i < n; i++) {
-				cout << _vertexs[i] << " ";
+				cout << "[" << i << "]->" << _vertexs[i] << endl;
 			}
 			cout << endl;
 
+			//打印邻接矩阵
 			//横下标
 			cout << "  ";
 			for (int i = 0; i < n; i++) {
-				cout << i << " ";
+				//cout << i << " ";
+				printf("%4d", i);
 			}
 			cout << endl;
 			for (int i = 0; i < n; i++) {
 				cout << i << " "; //竖下标
 				for (int j = 0; j < n; j++) {
-					if (_matrix[i][j] == MAX_W)
-						cout << "* ";
-					else
-						cout << _matrix[i][j] << " ";
+					if (_matrix[i][j] == MAX_W) {
+						//cout << "* ";
+						printf("%4c", '*');
+					}
+					else {
+						//cout << _matrix[i][j] << " ";
+						printf("%4d", _matrix[i][j]);
+					}
 				}
 				cout << endl;
 			}
 			cout << endl;
 		}
 	private:
-		vector<V> _vertexs; //顶点值
-		unordered_map<V, int> _vIndexMap; //顶点与下标的映射
-		vector<vector<W>> _matrix; //邻接矩阵
+		vector<V> _vertexs;               //顶点集合
+		unordered_map<V, int> _vIndexMap; //顶点映射下标
+		vector<vector<W>> _matrix;        //邻接矩阵
 	};
 	void testGraph() {
 		Graph<char, int, INT_MAX, true> g("ABCD", 4);
@@ -132,9 +156,11 @@ namespace Matrix {
 namespace LinkTable {
 	template<class W>
 	struct Edge {
-		int _dsti;
-		W _weight;
+		//int _srci; //源顶点的下标
+		int _dsti; //目标顶点的下标
+		W _weight; //边的权值
 		Edge<W>* _next;
+
 		Edge(int dsti, const W& weight)
 			:_dsti(dsti)
 			,_weight(weight)
@@ -194,13 +220,13 @@ namespace LinkTable {
 			}
 		}
 	private:
-		vector<V> _vertexs; //顶点值
-		unordered_map<V, int> _vIndexMap; //顶点与下标的映射
-		vector<Edge*> _linkTable; //邻接表
+		vector<V> _vertexs;               //顶点集合
+		unordered_map<V, int> _vIndexMap; //顶点映射下标
+		vector<Edge*> _linkTable;         //邻接表
 	};
 	void testGraph() {
 		string a[] = { "张三","李四","王五","赵六" };
-		Graph<string, int> g(a, 4);
+		Graph<string, int, true> g(a, 4);
 		g.addEdge("张三", "李四", 100);
 		g.addEdge("张三", "王五", 200);
 		g.addEdge("王五", "赵六", 30);

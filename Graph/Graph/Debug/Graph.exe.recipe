@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\code\Graph\Debug\Graph.exe</FullPath>
+      <FullPath>D:\github\data-structure-topics\Graph\Debug\Graph.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
