@@ -4,6 +4,6 @@ int main() {
 	//Matrix::testGraph();
 	//LinkTable::testGraph();
 
-	Matrix::testBfs();
+	Matrix::testBfsDfs();
 	return 0;
 }
