@@ -1,10 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <unordered_map>
 #include <string>
 #include <queue>
+#include "UnionFindSet.h"
 using namespace std;
 
 //邻接矩阵
@@ -12,6 +14,8 @@ namespace Matrix {
 	template<class V, class W, W MAX_W = INT_MAX, bool Direction = false>
 	class Graph {
 	public:
+		//强制生成默认构造
+		Graph() = default;
 		//构造函数
 		Graph(const V* vertexs, int n)
 			:_vertexs(vertexs, vertexs + n) //设置顶点集合
@@ -32,13 +36,16 @@ namespace Matrix {
 				return -1;
 			}
 		}
-		//添加边
-		void addEdge(const V& src, const V& dst, const W& weight) {
-			int srci = getVertexIndex(src), dsti = getVertexIndex(dst); //获取源顶点和目标顶点的下标
+		void _addEdge(int srci, int dsti, const W& weight) {
 			_matrix[srci][dsti] = weight; //设置邻接矩阵中对应的值
 			if (Direction == false) { //无向图
 				_matrix[dsti][srci] = weight; //添加从目标顶点到源顶点的边
 			}
+		}
+		//添加边
+		void addEdge(const V& src, const V& dst, const W& weight) {
+			int srci = getVertexIndex(src), dsti = getVertexIndex(dst); //获取源顶点和目标顶点的下标
+			_addEdge(srci, dsti, weight);
 		}
 		//广度优先遍历
 		void bfs(const V& src) {
@@ -126,6 +133,166 @@ namespace Matrix {
 			}
 			cout << endl;
 		}
+		//边
+		struct Edge {
+			int _srci; //源顶点的下标
+			int _dsti; //目标顶点的下标
+			W _weight; //边的权值
+			Edge(int srci, int dsti, const W& weight)
+				:_srci(srci)
+				, _dsti(dsti)
+				, _weight(weight)
+			{}
+			bool operator>(const Edge& edge) const{
+				return _weight > edge._weight;
+			}
+		};
+		//获取当前图的最小生成树（Kruskal算法）
+		W Kruskal(Graph<V, W, MAX_W, Direction>& minTree) {
+			int n = _vertexs.size();
+			//设置最小生成树的各个成员变量
+			minTree._vertexs = _vertexs; //设置最小生成树的顶点集合
+			minTree._vIndexMap = _vIndexMap; //设置最小生成树顶点与下标的映射
+			minTree._matrix.resize(n, vector<W>(n, MAX_W)); //开辟最小生成树的二维数组空间
+
+			priority_queue<Edge, vector<Edge>, greater<Edge>> minHeap; //优先级队列（小堆）
+			//将所有边添加到优先级队列
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < i; j++) { //只遍历矩阵的一半，避免重复添加相同的边
+					if (_matrix[i][j] != MAX_W)
+						minHeap.push(Edge(i, j, _matrix[i][j]));
+				}
+			}
+			UnionFindSet ufs(n); //n个顶点的并查集
+			int count = 0; //已选边的数量
+			W totalWeight = W(); //最小生成树的总权值
+			while (!minHeap.empty() && count < n - 1) {
+				//从优先级队列中获取一个权值最小的边
+				Edge minEdge = minHeap.top();
+				minHeap.pop();
+				int srci = minEdge._srci, dsti = minEdge._dsti;
+				W weight = minEdge._weight;
+
+				if (!ufs.inSameSet(srci, dsti)) { //边的源顶点和目标顶点不在同一个集合
+					minTree._addEdge(srci, dsti, weight); //在最小生成树中添加边
+					ufs.unionSet(srci, dsti); //合并源顶点和目标顶点对应的集合
+					count++;
+					totalWeight += weight;
+					cout << "选边: " << _vertexs[srci] << "->" << _vertexs[dsti] << ":" << weight << endl;
+				}
+				else { //边的源顶点和目标顶点在同一个集合，加入这条边会构成环
+					cout << "成环: " << _vertexs[srci] << "->" << _vertexs[dsti] << ":" << weight << endl;
+				}
+			}
+			if (count == n - 1) {
+				cout << "构建最小生成树成功" << endl;
+				return totalWeight;
+			}
+			else {
+				cout << "无法构成最小生成树" << endl;
+				return W();
+			}
+		}
+		//获取当前图的最小生成树（Kruskal算法）
+		//W Kruskal(Graph<V, W, MAX_W, Direction>& minTree) {
+		//	int n = _vertexs.size();
+		//	minTree._vertexs = _vertexs;
+		//	minTree._vIndexMap = _vIndexMap;
+		//	minTree._matrix.resize(n, vector<W>(n, MAX_W));
+
+		//	vector<Edge> v;
+		//	//将所有边添加到优先级队列（不要重复添加）
+		//	for (int i = 0; i < n; i++) {
+		//		for (int j = 0; j < i; j++) { //注意
+		//			if (_matrix[i][j] != MAX_W)
+		//				v.push_back(Edge(i, j, _matrix[i][j]));
+		//		}
+		//	}
+		//	sort(v.begin(), v.end(), [](const Edge& e1, const Edge& e2)->bool {
+		//		return e1._weight < e2._weight;
+		//		});
+		//	UnionFindSet ufs(n); //n个顶点的并查集
+		//	int count = 0; //已选边的数量
+		//	W totalWeight = W(); //最小生成树的总权值
+		//	size_t index = 0;
+		//	while (index < v.size() && count < n - 1) {
+		//		Edge minEdge = v[index];
+		//		int srci = minEdge._srci, dsti = minEdge._dsti;
+		//		W weight = minEdge._weight;
+		//		index++;
+		//		if (!ufs.inSameSet(srci, dsti)) {
+		//			minTree._addEdge(srci, dsti, weight); //在最小生成树中添加边
+		//			ufs.unionSet(srci, dsti);
+		//			count++;
+		//			totalWeight += weight;
+		//			cout << "选边: " << _vertexs[srci] << "->" << _vertexs[dsti] << ":" << weight << endl;
+		//		}
+		//		else {
+		//			cout << "成环: " << _vertexs[srci] << "->" << _vertexs[dsti] << ":" << weight << endl;
+		//		}
+		//	}
+		//	if (count == n - 1) {
+		//		cout << "构建最小生成树成功" << endl;
+		//		return totalWeight;
+		//	}
+		//	else {
+		//		cout << "无法构成最小生成树" << endl;
+		//		return W();
+		//	}
+		//}
+		//获取当前图的最小生成树（Prim算法）
+		W Prim(Graph<V, W, MAX_W, Direction>& minTree, const V& start) {
+			int n = _vertexs.size();
+			//设置最小生成树的各个成员变量
+			minTree._vertexs = _vertexs; //设置最小生成树的顶点集合
+			minTree._vIndexMap = _vIndexMap; //设置最小生成树顶点与下标的映射
+			minTree._matrix.resize(n, vector<W>(n, MAX_W)); //开辟最小生成树的二维数组空间
+
+			int starti = getVertexIndex(start); //获取起始顶点的下标
+			vector<bool> forest(n, false);
+			forest[starti] = true;
+			priority_queue<Edge, vector<Edge>, greater<Edge>> minHeap; //优先级队列（小堆）
+			
+			//将与起始顶点相连的边加入优先级队列
+			for (int i = 0; i < n; i++) {
+				if (_matrix[starti][i] != MAX_W)
+					minHeap.push(Edge(starti, i, _matrix[starti][i]));
+			}
+
+			int count = 0; //已选边的数量
+			W totalWeight = W(); //最小生成树的总权值
+			while (!minHeap.empty() && count < n - 1) {
+				//从优先级队列中获取一个权值最小的边
+				Edge minEdge = minHeap.top();
+				minHeap.pop();
+				int srci = minEdge._srci, dsti = minEdge._dsti;
+				W weight = minEdge._weight;
+
+				if (forest[dsti] == false) { //边的目标顶点还没有被加入到forest集合中
+					//将与目标顶点相连的边加入优先级队列
+					for (int i = 0; i < n; i++) {
+						if (_matrix[dsti][i] != MAX_W && forest[i] == false) //加入的边的目标顶点不能在forest集合中
+							minHeap.push(Edge(dsti, i, _matrix[dsti][i]));
+					}
+					minTree._addEdge(srci, dsti, weight); //在最小生成树中添加边
+					forest[dsti] = true; //将边的目标顶点加入forest集合
+					count++;
+					totalWeight += weight;
+					cout << "选边: " << _vertexs[srci] << "->" << _vertexs[dsti] << ":" << weight << endl;
+				}
+				else { //边的目标顶点已经在forest集合中，加入这条边会构成环
+					cout << "成环: " << _vertexs[srci] << "->" << _vertexs[dsti] << ":" << weight << endl;
+				}
+			}
+			if (count == n - 1) {
+				cout << "构建最小生成树成功" << endl;
+				return totalWeight;
+			}
+			else {
+				cout << "无法构成最小生成树" << endl;
+				return W();
+			}
+		}
 	private:
 		vector<V> _vertexs;               //顶点集合
 		unordered_map<V, int> _vIndexMap; //顶点映射下标
@@ -172,6 +339,37 @@ namespace Matrix {
 		g.print();
 		g.bfs('A');
 		g.dfs('A');
+	}
+	void testMinTree() {
+		Graph<char, int> g("abcdefghi", 9);
+		g.addEdge('a', 'b', 4);
+		g.addEdge('a', 'h', 8);
+		g.addEdge('b', 'c', 8);
+		g.addEdge('b', 'h', 11);
+		g.addEdge('c', 'i', 2);
+		g.addEdge('c', 'f', 4);
+		g.addEdge('c', 'd', 7);
+		g.addEdge('d', 'f', 14);
+		g.addEdge('d', 'e', 9);
+		g.addEdge('e', 'f', 10);
+		g.addEdge('f', 'g', 2);
+		g.addEdge('g', 'h', 1);
+		g.addEdge('g', 'i', 6);
+		g.addEdge('h', 'i', 7);
+
+
+		//Graph<char, int> minTree;
+		//cout << g.Kruskal(minTree) << endl;
+		//minTree.print();
+
+		Graph<char, int> minTree;
+		cout << g.Prim(minTree, 'a') << endl;
+		minTree.print();
+
+		//for (int i = 0; i < 9; i++) {
+		//	Graph<char, int> minTree;
+		//	cout << g.Prim(minTree, 'a'+i) << endl;
+		//}
 	}
 }
 

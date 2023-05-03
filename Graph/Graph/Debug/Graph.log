@@ -1,17 +1,17 @@
 ﻿  test.cpp
-D:\github\data-structure-topics\Graph\Graph\Graph.h(56,24): warning C4018: “<”: 有符号/无符号不匹配
-D:\github\data-structure-topics\Graph\Graph\Graph.h(43): message : 在编译 类 模板 成员函数“void Matrix::Graph<char,int,2147483647,false>::bfs(const V &)”时
+D:\github\data-structure-topics\Graph\Graph\Graph.h(64,24): warning C4018: “<”: 有符号/无符号不匹配
+D:\github\data-structure-topics\Graph\Graph\Graph.h(51): message : 在编译 类 模板 成员函数“void Matrix::Graph<char,int,2147483647,false>::bfs(const V &)”时
           with
           [
               V=char
           ]
-D:\github\data-structure-topics\Graph\Graph\Graph.h(170): message : 查看对正在编译的函数 模板 实例化“void Matrix::Graph<char,int,2147483647,false>::bfs(const V &)”的引用
+D:\github\data-structure-topics\Graph\Graph\Graph.h(334): message : 查看对正在编译的函数 模板 实例化“void Matrix::Graph<char,int,2147483647,false>::bfs(const V &)”的引用
           with
           [
               V=char
           ]
-D:\github\data-structure-topics\Graph\Graph\Graph.h(157): message : 查看对正在编译的 类 模板 实例化“Matrix::Graph<char,int,2147483647,false>”的引用
-D:\github\data-structure-topics\Graph\Graph\Graph.h(82,22): warning C4018: “<”: 有符号/无符号不匹配
-D:\github\data-structure-topics\Graph\Graph\Graph.h(79): message : 在编译 类 模板 成员函数“void Matrix::Graph<char,int,2147483647,false>::_dfs(int,std::vector<bool,std::allocator<bool>> &)”时
-D:\github\data-structure-topics\Graph\Graph\Graph.h(91): message : 查看对正在编译的函数 模板 实例化“void Matrix::Graph<char,int,2147483647,false>::_dfs(int,std::vector<bool,std::allocator<bool>> &)”的引用
+D:\github\data-structure-topics\Graph\Graph\Graph.h(321): message : 查看对正在编译的 类 模板 实例化“Matrix::Graph<char,int,2147483647,false>”的引用
+D:\github\data-structure-topics\Graph\Graph\Graph.h(91,22): warning C4018: “<”: 有符号/无符号不匹配
+D:\github\data-structure-topics\Graph\Graph\Graph.h(88): message : 在编译 类 模板 成员函数“void Matrix::Graph<char,int,2147483647,false>::_dfs(int,std::vector<bool,std::allocator<bool>> &)”时
+D:\github\data-structure-topics\Graph\Graph\Graph.h(101): message : 查看对正在编译的函数 模板 实例化“void Matrix::Graph<char,int,2147483647,false>::_dfs(int,std::vector<bool,std::allocator<bool>> &)”的引用
   Graph.vcxproj -> D:\github\data-structure-topics\Graph\Debug\Graph.exe
