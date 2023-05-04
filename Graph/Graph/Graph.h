@@ -70,7 +70,6 @@ namespace Matrix {
 				}
 				cout << endl;
 			}
-			
 			//while (!q.empty()) {
 			//	int front = q.front();
 			//	q.pop();
@@ -253,7 +252,7 @@ namespace Matrix {
 			forest[starti] = true;
 			priority_queue<Edge, vector<Edge>, greater<Edge>> minHeap; //优先级队列（小堆）
 			
-			//将与起始顶点相连的边加入优先级队列
+			//将从起始顶点连接出去的边加入优先级队列
 			for (int i = 0; i < n; i++) {
 				if (_matrix[starti][i] != MAX_W)
 					minHeap.push(Edge(starti, i, _matrix[starti][i]));
@@ -269,7 +268,7 @@ namespace Matrix {
 				W weight = minEdge._weight;
 
 				if (forest[dsti] == false) { //边的目标顶点还没有被加入到forest集合中
-					//将与目标顶点相连的边加入优先级队列
+					//将从目标顶点连接出去的边加入优先级队列
 					for (int i = 0; i < n; i++) {
 						if (_matrix[dsti][i] != MAX_W && forest[i] == false) //加入的边的目标顶点不能在forest集合中
 							minHeap.push(Edge(dsti, i, _matrix[dsti][i]));
