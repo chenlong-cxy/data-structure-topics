@@ -48,9 +48,9 @@ public:
 			root = _ufs[root];
 		}
 		//路径压缩
-		while (_ufs[x] >= 0) {
+		while (_ufs[x] >= 0) { //遍历从根结点到x结点路径上的所有结点
 			int parent = _ufs[x];
-			_ufs[x] = root;
+			_ufs[x] = root; //将结点的父亲改为根结点
 			x = parent;
 		}
 		return root; //返回根结点
@@ -75,6 +75,10 @@ public:
 				count++;
 		}
 		return count; //返回根结点的个数
+	}
+	//判断两个元素是否在同一个集合
+	bool inSameSet(int x1, int x2) {
+		return findRoot(x1) == findRoot(x2);
 	}
 	void print() {
 		for (const auto& e : _ufs)
