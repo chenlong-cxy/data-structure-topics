@@ -32,6 +32,7 @@ namespace Matrix {
 				return iter->second;
 			}
 			else { //顶点不存在
+				cout << "debug: " << v << endl;
 				throw invalid_argument("不存在的顶点");
 				return -1;
 			}
@@ -292,102 +293,109 @@ namespace Matrix {
 				return W();
 			}
 		}
-		void Dijkstra(const V& src, vector<W>& dict, vector<int>& parentPath) {
+		//获取单源最短路径（Dijkstra算法）
+		void Dijkstra(const V& src, vector<W>& dist, vector<int>& parentPath) {
 			int n = _vertexs.size();
-			int srci = getVertexIndex(src); //获取源顶点的编号
-			dict.resize(n, MAX_W); //源顶点到各个顶点的路径权值总和初始化为无穷大
-			parentPath.resize(n, -1); //各个顶点最短路径的上一个顶点的编号初始化为-1
-			dict[srci] = W(); //源顶点到源顶点的路径权值总和为权值的缺省值
-			vector<bool> S(n, false); //已经确定最短路径的顶点
-			for (int i = 0; i < n; i++) { //需要从Q集合中选出n个顶点到S集合
-				W minW = MAX_W;
-				int u = -1;
-				//从集合Q中选出一个路径权值总和最小的顶点
+			int srci = getVertexIndex(src); //获取源顶点的下标
+			dist.resize(n, MAX_W); //源顶点到各个顶点的路径权值初始化为MAX_W
+			parentPath.resize(n, -1); //各个顶点的前驱顶点初始化为-1
+
+			dist[srci] = W(); //源顶点到源顶点的路径权值设置为权值的缺省值
+			vector<bool> S(n, false); //已经确定最短路径的顶点集合
+			for (int i = 0; i < n; i++) { //需要将Q集合中的n个顶点加入到S集合
+				//从集合Q中选出一个路径权值最小的顶点
+				W minW = MAX_W; //最小路径权值
+				int u = -1;     //顶点的下标
 				for (int j = 0; j < n; j++) {
-					if (S[j] == false && dict[j] < minW) {
+					if (S[j] == false && dist[j] < minW) {
 						u = j;
-						minW = dict[j];
+						minW = dist[j];
 					}
 				}
-				S[u] = true;
-				//松弛
+				S[u] = true; //将选出的顶点加入到S集合
+				//对u连接出去的顶点进行松弛
 				for (int v = 0; v < n; v++) {
-					if (S[v] == false && _matrix[u][v] != MAX_W && dict[u] + _matrix[u][v] < dict[v]) {
-						dict[v] = dict[u] + _matrix[u][v];
-						parentPath[v] = u; //松弛成功，更新路径父顶点
+					if (S[v] == false && _matrix[u][v] != MAX_W && dist[u] + _matrix[u][v] < dist[v]) { //松弛的顶点不能在S集合
+						dist[v] = dist[u] + _matrix[u][v]; //松弛更新出更小的路径权值
+						parentPath[v] = u; //更新路径的前驱顶点
 					}
 				}
 			}
 		}
-		bool BellmanFord(const char& src, vector<W>& dict, vector<int>& parentPath) {
+		//获取单源最短路径（BellmanFord算法）
+		bool BellmanFord(const char& src, vector<W>& dist, vector<int>& parentPath) {
 			int n = _vertexs.size();
-			int srci = getVertexIndex(src);
-			dict.resize(n, MAX_W);
-			parentPath.resize(n, -1);
-			dict[srci] = W();
+			int srci = getVertexIndex(src); //获取源顶点的下标
+			dist.resize(n, MAX_W); //源顶点到各个顶点的路径权值初始化为MAX_W
+			parentPath.resize(n, -1); //各个顶点的前驱顶点初始化为-1
+
+			dist[srci] = W(); //源顶点到源顶点的路径权值设置为权值的缺省值
 			for (int k = 0; k < n - 1; k++) { //最多更新n-1轮
-				bool exchange = false;
+				bool update = false; //记录本轮是否更新过
 				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < n; j++) {
-						if (_matrix[i][j] != MAX_W && dict[i] + _matrix[i][j] < dict[j]) {
-							dict[j] = dict[i] + _matrix[i][j];
-							parentPath[j] = i;
-							exchange = true;
+						if (_matrix[i][j] != MAX_W && dist[i] != MAX_W && dist[i] + _matrix[i][j] < dist[j]) {
+							dist[j] = dist[i] + _matrix[i][j]; //松弛更新出更小的路径权值
+							parentPath[j] = i; //更新路径的前驱顶点
+							update = true;
 						}
 					}
 				}
-				if (exchange == false) {
+				if (update == false) { //本轮没有更新过，不必进行后续轮次的更新
 					break;
 				}
+				else {
+					cout << "更新第" << k << "次" << endl;
+				}
 			}
-			//更新了n-1次后如果还能更新，则说明带有负权回路
+			//更新n-1轮后如果还能更新，则说明带有负权回路
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					if (_matrix[i][j] != MAX_W && dict[i] + _matrix[i][j] < dict[j]) {
-						return false;
+					if (_matrix[i][j] != MAX_W && dist[i] + _matrix[i][j] < dist[j]) {
+						return false; //带有负权回路的图无法求出最短路径
 					}
 				}
 			}
 			return true;
 		}
-		void FloydWarshall(vector<vector<W>>& vvDict, vector<vector<int>>& vvParentPath) {
+		//获取多源最短路径（FloydWarshall算法）
+		void FloydWarshall(vector<vector<W>>& vvDist, vector<vector<int>>& vvParentPath) {
 			int n = _vertexs.size();
-			vvDict.resize(n, vector<W>(n, MAX_W));
-			vvParentPath.resize(n, vector<int>(n, -1));
+			vvDist.resize(n, vector<W>(n, MAX_W)); //任意两个顶点直接的路径权值初始化为MAX_W
+			vvParentPath.resize(n, vector<int>(n, -1)); //各个顶点的前驱顶点初始化为-1
 
-			//初始化直接相连的顶点
+			//根据邻接矩阵初始化直接相连的顶点
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					if (_matrix[i][j] != MAX_W) {
-						vvDict[i][j] = _matrix[i][j];
-						vvParentPath[i][j] = i;
+					if (_matrix[i][j] != MAX_W) { //i->j有边
+						vvDist[i][j] = _matrix[i][j]; //i->j的路径权值
+						vvParentPath[i][j] = i; //i->j路径的前驱顶点为i
 					}
-					if (i == j) {
-						vvDict[i][j] = 0;
+					if (i == j) { //i->i
+						vvDist[i][j] = W(); //i->i的路径权值设置为权值的缺省值
 					}
 				}
 			}
-			printDictAndParentPath(vvDict, vvParentPath);
-			//松弛
-			for (int k = 0; k < n; k++) {
+			printDictAndParentPath(vvDist, vvParentPath);
+			for (int k = 0; k < n; k++) { //依次取各个顶点作为i->j路径的中间顶点
 				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < n; j++) {
-						if (vvDict[i][k] != MAX_W && vvDict[k][j] != MAX_W &&
-							vvDict[i][k] + vvDict[k][j] < vvDict[i][j]) {
-							vvDict[i][j] = vvDict[i][k] + vvDict[k][j];
-							vvParentPath[i][j] = vvParentPath[k][j];
+						if (vvDist[i][k] != MAX_W && vvDist[k][j] != MAX_W &&
+							vvDist[i][k] + vvDist[k][j] < vvDist[i][j]) { //存在i->k和k->j的路径，并且这两条路径的权值之和小于当前i->j路径的权值
+							vvDist[i][j] = vvDist[i][k] + vvDist[k][j]; //松弛更新出更小的路径权值
+							vvParentPath[i][j] = vvParentPath[k][j]; //更小路径的前驱顶点
 						}
 					}
 				}
-				printDictAndParentPath(vvDict, vvParentPath);
+				printDictAndParentPath(vvDist, vvParentPath);
 			}
 		}
-		void printDictAndParentPath(const vector<vector<W>>& vvDict, const vector<vector<int>>& vvParentPath) {
+		void printDictAndParentPath(const vector<vector<W>>& vvDist, const vector<vector<int>>& vvParentPath) {
 			int n = _vertexs.size();
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					if (vvDict[i][j] != MAX_W) {
-						printf("%4d", vvDict[i][j]);
+					if (vvDist[i][j] != MAX_W) {
+						printf("%4d", vvDist[i][j]);
 					}
 					else {
 						printf("   *");
@@ -395,6 +403,7 @@ namespace Matrix {
 				}
 				cout << endl;
 			}
+			cout << endl;
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
 					if (vvParentPath[i][j] != -1) {
@@ -408,22 +417,22 @@ namespace Matrix {
 			}
 			cout << "--------------------------------------" << endl;
 		}
-		void printShortPath(const V& src, const vector<W>& dict, const vector<int>& parentPath) {
+		//打印最短路径及路径权值
+		void printShortPath(const V& src, const vector<W>& dist, const vector<int>& parentPath) {
 			int n = _vertexs.size();
-			int srci = getVertexIndex(src);
+			int srci = getVertexIndex(src); //获取源顶点的下标
 			for (int i = 0; i < n; i++) {
-				cout << src << "->" << _vertexs[i] << ": " << src;
 				vector<int> path;
 				int cur = i;
-				while (cur != srci) {
+				while (cur != -1) { //源顶点的前驱顶点为-1
 					path.push_back(cur);
 					cur = parentPath[cur];
 				}
-				reverse(path.begin(), path.end());
+				reverse(path.begin(), path.end()); //逆置
 				for (int j = 0; j < path.size(); j++) {
-					cout << "->" << _vertexs[path[j]];
+					cout << _vertexs[path[j]] << "->";
 				}
-				cout << "[" << dict[i] << "]" << endl;
+				cout << "路径权值: " << dist[i] << "" << endl;
 			}
 		}
 	private:
@@ -516,9 +525,9 @@ namespace Matrix {
 		g.addEdge('y', 'z', 2);
 		g.addEdge('z', 's', 7);
 		g.addEdge('z', 'x', 6);
-		vector<int> dict, parentPath;
-		g.Dijkstra('s', dict, parentPath);
-		g.printShortPath('s', dict, parentPath);
+		vector<int> dist, parentPath;
+		g.Dijkstra('s', dist, parentPath);
+		g.printShortPath('s', dist, parentPath);
 
 		////没有找到带负权的最短路径
 		//Graph<char, int, INT_MAX, true> g("styx", 4);
@@ -526,27 +535,40 @@ namespace Matrix {
 		//g.addEdge('s', 'y', 5);
 		//g.addEdge('t', 'y', -7);
 		//g.addEdge('y', 'x', 3);
-		//vector<int> dict, parentPath;
-		//g.Dijkstra('s', dict, parentPath);
-		//g.printShortPath('s', dict, parentPath);
+		//vector<int> dist, parentPath;
+		//g.Dijkstra('s', dist, parentPath);
+		//g.printShortPath('s', dist, parentPath);
 	}
 	void testBellmanFord() {
-		Graph<char, int, INT_MAX, true> g("stxyz", 5);
-		g.addEdge('s', 't', 6);
-		g.addEdge('s', 'y', 7);
-		g.addEdge('t', 'x', 5);
-		g.addEdge('t', 'y', 8);
-		g.addEdge('t', 'z', -4);
-		g.addEdge('x', 't', -2);
-		g.addEdge('y', 'x', -3);
-		g.addEdge('y', 'z', 9);
-		g.addEdge('z', 's', 2);
+		//Graph<char, int, INT_MAX, true> g("stxyz", 5);
+		//g.addEdge('s', 't', 6);
+		//g.addEdge('s', 'y', 7);
+		//g.addEdge('t', 'x', 5);
+		//g.addEdge('t', 'y', 8);
+		//g.addEdge('t', 'z', -4);
+		//g.addEdge('x', 't', -2);
+		//g.addEdge('y', 'x', -3);
+		//g.addEdge('y', 'z', 9);
+		//g.addEdge('z', 's', 2);
 		//g.addEdge('z', 'x', 7);
-		g.addEdge('z', 'x', -7);
+		////g.addEdge('z', 'x', -7);
 
-		vector<int> dict, parentPath;
-		if (g.BellmanFord('s', dict, parentPath)) {
-			g.printShortPath('s', dict, parentPath);
+		//vector<int> dist, parentPath;
+		//if (g.BellmanFord('s', dist, parentPath)) {
+		//	g.printShortPath('s', dist, parentPath);
+		//}
+		//else {
+		//	cout << "存在负权回路" << endl;
+		//}
+
+		Graph<char, int, INT_MAX, true> g("ABCDE", 5);
+		g.addEdge('B', 'A', 1);
+		g.addEdge('C', 'B', 1);
+		g.addEdge('D', 'C', 1);
+		g.addEdge('E', 'D', 1);
+		vector<int> dist, parentPath;
+		if (g.BellmanFord('E', dist, parentPath)) {
+			g.printShortPath('E', dist, parentPath);
 		}
 		else {
 			cout << "存在负权回路" << endl;
@@ -564,8 +586,14 @@ namespace Matrix {
 		g.addEdge('4', '3', -5);
 		g.addEdge('5', '4', 6);
 
-		vector<vector<int>> vvDict, vvParentPath;
-		g.FloydWarshall(vvDict, vvParentPath);
+		vector<vector<int>> vvDist, vvParentPath;
+		g.FloydWarshall(vvDist, vvParentPath);
+
+		const string str("12345");
+		for (int i = 0; i < vvDist.size(); i++) {
+			g.printShortPath(str[i], vvDist[i], vvParentPath[i]);
+			cout << endl;
+		}
 	}
 }
 
