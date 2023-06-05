@@ -8,7 +8,7 @@ int main() {
 	//Matrix::testMinTree();
 
 	//Matrix::testDijkstra();
-	//Matrix::testBellmanFord();
-	Matrix::testFloydWarshall();
+	Matrix::testBellmanFord();
+	//Matrix::testFloydWarshall();
 	return 0;
 }

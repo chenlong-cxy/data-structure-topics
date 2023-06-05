@@ -297,39 +297,39 @@ namespace Matrix {
 		void Dijkstra(const V& src, vector<W>& dist, vector<int>& parentPath) {
 			int n = _vertexs.size();
 			int srci = getVertexIndex(src); //获取源顶点的下标
-			dist.resize(n, MAX_W); //源顶点到各个顶点的路径权值初始化为MAX_W
+			dist.resize(n, MAX_W); //各个顶点的估计值初始化为MAX_W
 			parentPath.resize(n, -1); //各个顶点的前驱顶点初始化为-1
 
-			dist[srci] = W(); //源顶点到源顶点的路径权值设置为权值的缺省值
+			dist[srci] = W(); //源顶点的估计值设置为权值的缺省值
 			vector<bool> S(n, false); //已经确定最短路径的顶点集合
-			for (int i = 0; i < n; i++) { //需要将Q集合中的n个顶点加入到S集合
-				//从集合Q中选出一个路径权值最小的顶点
-				W minW = MAX_W; //最小路径权值
-				int u = -1;     //顶点的下标
+			for (int i = 0; i < n; i++) { //将Q集合中的n个顶点全部加入到S集合
+				//从集合Q中选出一个估计值最小的顶点
+				W minW = MAX_W; //最小估计值
+				int u = -1;     //估计值最小的顶点
 				for (int j = 0; j < n; j++) {
 					if (S[j] == false && dist[j] < minW) {
-						u = j;
 						minW = dist[j];
+						u = j;
 					}
 				}
 				S[u] = true; //将选出的顶点加入到S集合
-				//对u连接出去的顶点进行松弛
+				//对u连接出去的顶点进行松弛更新
 				for (int v = 0; v < n; v++) {
 					if (S[v] == false && _matrix[u][v] != MAX_W && dist[u] + _matrix[u][v] < dist[v]) { //松弛的顶点不能在S集合
-						dist[v] = dist[u] + _matrix[u][v]; //松弛更新出更小的路径权值
+						dist[v] = dist[u] + _matrix[u][v]; //松弛更新出更小的估计值
 						parentPath[v] = u; //更新路径的前驱顶点
 					}
 				}
 			}
 		}
 		//获取单源最短路径（BellmanFord算法）
-		bool BellmanFord(const char& src, vector<W>& dist, vector<int>& parentPath) {
+		bool BellmanFord(const V& src, vector<W>& dist, vector<int>& parentPath) {
 			int n = _vertexs.size();
 			int srci = getVertexIndex(src); //获取源顶点的下标
-			dist.resize(n, MAX_W); //源顶点到各个顶点的路径权值初始化为MAX_W
+			dist.resize(n, MAX_W); //各个顶点的估计值初始化为MAX_W
 			parentPath.resize(n, -1); //各个顶点的前驱顶点初始化为-1
 
-			dist[srci] = W(); //源顶点到源顶点的路径权值设置为权值的缺省值
+			dist[srci] = W(); //源顶点的估计值设置为权值的缺省值
 			for (int k = 0; k < n - 1; k++) { //最多更新n-1轮
 				bool update = false; //记录本轮是否更新过
 				for (int i = 0; i < n; i++) {
@@ -338,6 +338,7 @@ namespace Matrix {
 							dist[j] = dist[i] + _matrix[i][j]; //松弛更新出更小的路径权值
 							parentPath[j] = i; //更新路径的前驱顶点
 							update = true;
+							cout << "use: " << _vertexs[i] << "->" << _vertexs[j] << endl;
 						}
 					}
 				}
