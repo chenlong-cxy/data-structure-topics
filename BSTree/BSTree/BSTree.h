@@ -43,23 +43,24 @@ public:
 		_root = _Copy(t._root); //拷贝t对象的二叉搜索树
 	}
 
-	//赋值运算符重载函数
-	//现代写法
-	BSTree<K>& operator=(BSTree<K> t) //编译器接收右值的时候自动调用拷贝构造函数
-	{
-		swap(_root, t._root); //交换这两个对象的二叉搜索树
-		return *this; //支持连续赋值
-	}
-
-	////传统写法
-	//const BSTree<K>& operator=(const BSTree<K>& t)
+	////赋值运算符重载函数
+	////现代写法
+	//BSTree<K>& operator=(BSTree<K> t) //编译器接收右值的时候自动调用拷贝构造函数
 	//{
-	//	if (this != &t) //防止自己给自己赋值
-	//	{
-	//		_root = _Copy(t._root); //拷贝t对象的二叉搜索树
-	//	}
+	//	swap(_root, t._root); //交换这两个对象的二叉搜索树
 	//	return *this; //支持连续赋值
 	//}
+
+	//传统写法
+	const BSTree<K>& operator=(const BSTree<K>& t)
+	{
+		if (this != &t) //防止自己给自己赋值
+		{
+			_Destory(_root); //先将当前的二叉搜索树中的结点释放
+			_root = _Copy(t._root); //拷贝t对象的二叉搜索树
+		}
+		return *this; //支持连续赋值
+	}
 
 	//释放树中结点
 	void _Destory(Node* root)
@@ -75,6 +76,7 @@ public:
 	~BSTree()
 	{
 		_Destory(_root); //释放二叉搜索树中的结点
+		cout << "~BSTree()" << endl;
 		_root = nullptr; //及时置空
 	}
 
