@@ -368,13 +368,13 @@ public:
 			{
 				delP->_left = del->_right;
 				if (del->_right)
-					del->_right->_parent = parent;
+					del->_right->_parent = delP;
 			}
 			else //实际删除结点是其父结点的右孩子
 			{
 				delP->_right = del->_right;
 				if (del->_right)
-					del->_right->_parent = parent;
+					del->_right->_parent = delP;
 			}
 		}
 		else //实际删除结点的右子树为空
@@ -383,13 +383,13 @@ public:
 			{
 				delP->_left = del->_left;
 				if (del->_left)
-					del->_left->_parent = parent;
+					del->_left->_parent = delP;
 			}
 			else //实际删除结点是其父结点的右孩子
 			{
 				delP->_right = del->_left;
 				if (del->_left)
-					del->_left->_parent = parent;
+					del->_left->_parent = delP;
 			}
 		}
 		delete del; //实际删除结点
